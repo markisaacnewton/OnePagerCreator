@@ -1,0 +1,2606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proposal &amp; Single-Plan Executive Studio | VUL &amp; Traditional</title>
+
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- html2canvas & jsPDF for PNG & PDF Client-Side Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#fef2f2',
+              100: '#fee2e2',
+              200: '#fecaca',
+              300: '#fca5a5',
+              400: '#f87171',
+              500: '#ef4444',
+              600: '#dc2626',
+              700: '#b91c1c',
+              800: '#991b1b',
+              900: '#7f1d1d',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style id="dynamic-print-style">
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+    }
+  </style>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* A4 Aspect Ratio & Executive One-Pager Container */
+    .a4-sheet {
+      width: 816px;
+      min-height: 1123px;
+      height: auto;
+      background: #ffffff;
+      box-shadow: 0 20px 45px -15px rgba(185, 28, 28, 0.14), 0 4px 12px rgba(15, 23, 42, 0.06);
+      border-radius: 12px;
+      overflow: visible;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transform-origin: top center;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      flex-shrink: 0;
+    }
+
+    .a4-sheet.landscape {
+      width: 1123px;
+      min-height: 794px;
+      height: auto;
+    }
+
+    #sheet-scale-stage {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      width: 100%;
+      transition: height 0.2s ease;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #fff5f5;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #fca5a5;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #ef4444;
+    }
+
+    @media print {
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        height: 100% !important;
+        overflow: hidden !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      main {
+        display: block !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      #preview-wrapper {
+        display: flex !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: #ffffff !important;
+        overflow: visible !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      #sheet-scale-stage {
+        height: auto !important;
+        width: 100% !important;
+        display: block !important;
+      }
+      .a4-sheet {
+        transform: none !important;
+        width: 210mm !important;
+        max-width: 210mm !important;
+        height: auto !important;
+        min-height: 297mm !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        page-break-after: auto !important;
+        page-break-inside: avoid !important;
+        overflow: visible !important;
+      }
+      .a4-sheet.landscape {
+        transform: none !important;
+        width: 297mm !important;
+        max-width: 297mm !important;
+        height: auto !important;
+        min-height: 210mm !important;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-brand-100 selection:text-brand-800">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="no-print fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Top Navigation Bar (Red & White Corporate Theme) -->
+  <header class="no-print sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-brand-100 shadow-sm">
+    <div class="max-w-[1800px] mx-auto px-3 sm:px-5 h-14 sm:h-16 flex items-center justify-between gap-2">
+      <!-- Brand Identity -->
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-br from-brand-600 to-brand-700 flex items-center justify-center text-white shadow-sm shadow-brand-600/20">
+          <i data-lucide="shield-check" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-slate-900 text-sm sm:text-base lg:text-lg tracking-tight truncate">Proposal &amp; Single-Plan Studio</span>
+            <span id="header-mode-pill" class="hidden md:inline-flex shrink-0 items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-50 text-brand-700 border border-brand-200">
+              Single Plan: VUL
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-500 hidden sm:block truncate">Single VUL Spotlight &bull; Single Traditional Spotlight &bull; Multi-Plan Side-by-Side</p>
+        </div>
+      </div>
+
+      <!-- 2-Category Workspace Switcher Tabs (Editor vs A4 Preview) -->
+      <div class="flex shrink-0 bg-brand-50/80 p-1 rounded-xl border border-brand-200/80 shadow-inner">
+        <button id="tab-editor-btn" onclick="switchWorkspaceTab('editor')" class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-brand-600 text-white shadow-sm transition">
+          <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+          <span>1. Editor</span>
+        </button>
+        <button id="tab-preview-btn" onclick="switchWorkspaceTab('preview')" class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold text-brand-800 hover:text-brand-600 transition">
+          <i data-lucide="file-text" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+          <span>2. A4 Preview <span id="header-preview-badge">(VUL)</span></span>
+        </button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center shrink-0 gap-2">
+        <button onclick="downloadAsPNG()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold text-brand-700 bg-white hover:bg-brand-50 border border-brand-200 transition shadow-sm">
+          <i data-lucide="image" class="w-4 h-4 text-brand-600"></i>
+          <span class="hidden md:inline">Download PNG</span>
+          <span class="md:hidden">PNG</span>
+        </button>
+        <button onclick="downloadAsPDF()" class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 shadow-sm shadow-brand-600/20 transition">
+          <i data-lucide="file-down" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Download PDF</span>
+          <span class="sm:hidden">PDF</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Tabbed Workspace -->
+  <main class="max-w-[1400px] mx-auto flex flex-col min-h-[calc(100vh-3.5rem)] sm:min-h-[calc(100vh-4rem)]">
+
+    <!-- CATEGORY 1: PROPOSAL EDITOR VIEW -->
+    <aside id="editor-panel" class="no-print w-full max-w-4xl mx-auto my-0 sm:my-6 bg-white sm:rounded-2xl sm:border sm:border-brand-100 sm:shadow-sm p-4 sm:p-6 space-y-5">
+
+      <!-- 0. STUDIO MODE SELECTOR (RED & WHITE THEME) -->
+      <section class="rounded-2xl bg-gradient-to-br from-brand-800 via-brand-700 to-brand-600 p-4 text-white shadow-md shadow-brand-700/15 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-brand-200">Proposal Layout Mode</span>
+            <h2 class="text-sm sm:text-base font-extrabold text-white">Select Proposal Format</h2>
+          </div>
+          <span class="text-[11px] text-brand-100">Single Plan (VUL / Traditional) or Multi-Plan Comparison</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <!-- Mode 1: Single Plan - VUL -->
+          <button type="button" id="mode-btn-single-vul" onclick="switchStudioMode('single-vul')" class="text-left p-3 rounded-xl border transition flex flex-col justify-between gap-1.5 bg-white text-brand-900 border-white shadow-md">
+            <div class="flex items-center justify-between w-full">
+              <span class="inline-flex items-center gap-1.5 text-xs font-extrabold">
+                <i data-lucide="trending-up" class="w-4 h-4 text-brand-600"></i>
+                <span>Single Plan: VUL</span>
+              </span>
+              <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-brand-100 text-brand-700">1 Plan</span>
+            </div>
+            <p class="text-[11px] text-slate-600 leading-snug">Single VUL proposal spotlight with Protection Benefits and Policy Year Fund Value Projections.</p>
+          </button>
+
+          <!-- Mode 2: Single Plan - Traditional -->
+          <button type="button" id="mode-btn-single-trad" onclick="switchStudioMode('single-trad')" class="text-left p-3 rounded-xl border transition flex flex-col justify-between gap-1.5 bg-white/10 text-white border-white/20 hover:bg-white/20">
+            <div class="flex items-center justify-between w-full">
+              <span class="inline-flex items-center gap-1.5 text-xs font-extrabold">
+                <i data-lucide="shield" class="w-4 h-4 text-brand-200"></i>
+                <span>Single Plan: Traditional</span>
+              </span>
+              <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-white/20 text-white">1 Plan</span>
+            </div>
+            <p class="text-[11px] text-brand-100 leading-snug">Single Traditional proposal spotlight with Guaranteed Benefits and optional Cash Value, Payout &amp; Dividend toggles.</p>
+          </button>
+
+          <!-- Mode 3: Multi-Proposal Comparison -->
+          <button type="button" id="mode-btn-multi" onclick="switchStudioMode('multi')" class="text-left p-3 rounded-xl border transition flex flex-col justify-between gap-1.5 bg-white/10 text-white border-white/20 hover:bg-white/20">
+            <div class="flex items-center justify-between w-full">
+              <span class="inline-flex items-center gap-1.5 text-xs font-extrabold">
+                <i data-lucide="columns-3" class="w-4 h-4 text-brand-200"></i>
+                <span>Multi-Proposal Compare</span>
+              </span>
+              <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-white/20 text-white">Up to 10</span>
+            </div>
+            <p class="text-[11px] text-brand-100 leading-snug">Side-by-side matrix with VUL Fund Value Projection &amp; Traditional Cash Value/Payout/Dividend tables.</p>
+          </button>
+        </div>
+      </section>
+
+      <!-- 1. Shared Client & Header Info -->
+      <section class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-brand-600 text-white text-xs flex items-center justify-center font-bold">1</span>
+            Client &amp; Document Header
+          </h2>
+          <button type="button" onclick="resetCurrentMode()" class="text-xs font-semibold text-slate-400 hover:text-brand-600 transition">Clear Fields</button>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Proposal / Document Title</label>
+          <input type="text" id="inp-docTitle" oninput="syncSharedState()" placeholder="Executive Plan Proposal Summary" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs sm:text-sm font-semibold focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Client Name</label>
+            <input type="text" id="inp-clientName" oninput="syncSharedState()" placeholder="Juan Dela Cruz" class="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-brand-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Age / Client Profile</label>
+            <input type="text" id="inp-clientProfile" oninput="syncSharedState()" placeholder="34, Non-Smoker" class="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-brand-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Proposal Date</label>
+            <input type="date" id="inp-proposalDate" onchange="syncSharedState()" oninput="syncSharedState()" class="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-brand-500" />
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- SECTION A: SINGLE PLAN VUL EDITOR                                   -->
+      <!-- =================================================================== -->
+      <section id="single-vul-editor" class="space-y-4 pt-3 border-t border-brand-100">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-brand-600 text-white text-xs flex items-center justify-center font-bold">2</span>
+            Single VUL Plan Details &amp; Projections
+          </h2>
+        </div>
+
+        <!-- Core VUL Plan Info -->
+        <div class="rounded-2xl border border-brand-200 bg-brand-50/40 p-3.5 space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">VUL Product / Plan Name</label>
+              <input type="text" id="svul-name" oninput="syncSingleVulState()" placeholder="e.g., PRULink Exact Protector" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-900 focus:outline-none focus:border-brand-500" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Fund Allocation / Strategy</label>
+              <input type="text" id="svul-fund" oninput="syncSingleVulState()" placeholder="e.g., 100% Equity Fund" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-brand-500" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Premium Outlay</label>
+              <div class="flex rounded-xl border border-slate-300 bg-white overflow-hidden focus-within:border-brand-500">
+                <select id="svul-currency" onchange="syncSingleVulCurrency()" class="bg-brand-50 border-r border-slate-300 px-1.5 py-1.5 text-[11px] font-bold text-brand-800 focus:outline-none">
+                  <option value="PHP">₱ PHP</option>
+                  <option value="USD">$ USD</option>
+                </select>
+                <input type="text" id="svul-premium" oninput="syncSingleVulPremium()" placeholder="3,500" class="w-full min-w-0 bg-white px-2 py-1.5 text-xs font-bold text-brand-700 focus:outline-none" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Payment Mode</label>
+              <select id="svul-frequency" onchange="syncSingleVulState()" class="w-full rounded-xl border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:border-brand-500">
+                <option value="Monthly">Monthly</option>
+                <option value="Quarterly">Quarterly</option>
+                <option value="Semi-annual">Semi-annual</option>
+                <option value="Annual">Annual</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Pay Period</label>
+              <input type="text" id="svul-payTerm" oninput="syncSingleVulState()" placeholder="e.g., 10 Years to Pay" class="w-full rounded-xl border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-brand-500" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Coverage Duration</label>
+              <input type="text" id="svul-coverageAge" oninput="syncSingleVulState()" placeholder="e.g., Up to Age 100" class="w-full rounded-xl border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-brand-500" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Core Protection & Riders List -->
+        <div class="rounded-2xl border border-slate-200 bg-white p-3.5 space-y-2.5 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="heart-handshake" class="w-4 h-4 text-brand-600"></i>
+              Protection Benefits &amp; Attached Riders
+            </span>
+            <button type="button" onclick="addSingleVulBenefit()" class="text-[11px] font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+              <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Add Benefit
+            </button>
+          </div>
+          <div id="svul-benefits-list" class="space-y-2"></div>
+        </div>
+
+        <!-- VUL Fund Value Projections (Policy Year only) -->
+        <div class="rounded-2xl border border-slate-200 bg-white p-3.5 space-y-2.5 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="bar-chart-3" class="w-4 h-4 text-brand-600"></i>
+              Projected Fund Value Table (Non-Guaranteed)
+            </span>
+            <button type="button" onclick="addSingleVulProjectionRow()" class="text-[11px] font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+              <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Add Policy Year
+            </button>
+          </div>
+          <div class="grid grid-cols-3 gap-2 pb-1">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-500">Low Rate Header</label>
+              <input type="text" id="svul-rateLow" oninput="syncSingleVulState()" class="w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-[11px] font-bold text-slate-700" />
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-brand-700">Mid Rate Header</label>
+              <input type="text" id="svul-rateMid" oninput="syncSingleVulState()" class="w-full rounded-lg border border-brand-300 bg-brand-50/40 px-2 py-1 text-[11px] font-bold text-brand-700" />
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-500">High Rate Header</label>
+              <input type="text" id="svul-rateHigh" oninput="syncSingleVulState()" class="w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-[11px] font-bold text-slate-700" />
+            </div>
+          </div>
+          <div id="svul-projections-list" class="space-y-1.5"></div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- SECTION B: SINGLE PLAN TRADITIONAL EDITOR                           -->
+      <!-- =================================================================== -->
+      <section id="single-trad-editor" class="hidden space-y-4 pt-3 border-t border-brand-100">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-brand-700 text-white text-xs flex items-center justify-center font-bold">2</span>
+            Single Traditional Plan Details &amp; Guarantees
+          </h2>
+        </div>
+
+        <!-- Core Traditional Plan Info -->
+        <div class="rounded-2xl border border-brand-200 bg-brand-50/40 p-3.5 space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Traditional Product / Plan Name</label>
+              <input type="text" id="strad-name" oninput="syncSingleTradState()" placeholder="e.g., PRUWealth 10 / PruLifetime Income" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-900 focus:outline-none focus:border-brand-500" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Plan Category / Structure</label>
+              <input type="text" id="strad-category" oninput="syncSingleTradState()" placeholder="e.g., Endowment / Whole Life Participating" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-brand-500" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Premium Outlay</label>
+              <div class="flex rounded-xl border border-slate-300 bg-white overflow-hidden focus-within:border-brand-500">
+                <select id="strad-currency" onchange="syncSingleTradCurrency()" class="bg-brand-50 border-r border-slate-300 px-1.5 py-1.5 text-[11px] font-bold text-brand-800 focus:outline-none">
+                  <option value="PHP">₱ PHP</option>
+                  <option value="USD">$ USD</option>
+                </select>
+                <input type="text" id="strad-premium" oninput="syncSingleTradPremium()" placeholder="4,200" class="w-full min-w-0 bg-white px-2 py-1.5 text-xs font-bold text-brand-700 focus:outline-none" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Payment Mode</label>
+              <select id="strad-frequency" onchange="syncSingleTradState()" class="w-full rounded-xl border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:border-brand-500">
+                <option value="Monthly">Monthly</option>
+                <option value="Quarterly">Quarterly</option>
+                <option value="Semi-annual">Semi-annual</option>
+                <option value="Annual">Annual</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Limited Pay Term</label>
+              <input type="text" id="strad-payTerm" oninput="syncSingleTradState()" placeholder="e.g., 10 Years" class="w-full rounded-xl border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-brand-500" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Maturity / Coverage</label>
+              <input type="text" id="strad-maturity" oninput="syncSingleTradState()" placeholder="e.g., Lifetime / Age 100" class="w-full rounded-xl border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-brand-500" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Protection Benefits & Attached Riders -->
+        <div class="rounded-2xl border border-slate-200 bg-white p-3.5 space-y-2.5 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="badge-check" class="w-4 h-4 text-brand-600"></i>
+              Protection Benefits &amp; Attached Riders
+            </span>
+            <button type="button" onclick="addSingleTradBenefit()" class="text-[11px] font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+              <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Add Benefit
+            </button>
+          </div>
+          <div id="strad-benefits-list" class="space-y-2"></div>
+        </div>
+
+        <!-- Cash Values, Endowment Payouts & Dividends with Individual & Master ON/OFF Toggles -->
+        <div class="rounded-2xl border border-slate-200 bg-white p-3.5 space-y-3 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="landmark" class="w-4 h-4 text-brand-600"></i>
+              Cash Values, Endowment Payouts &amp; Dividends
+            </span>
+            <div class="flex items-center gap-2">
+              <button type="button" id="btn-strad-master-toggle" onclick="toggleTradAllSchedule()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-brand-600 text-white shadow-sm transition">
+                <i data-lucide="power" class="w-3 h-3"></i>
+                <span id="lbl-strad-master-toggle">Section: ON</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Individual Column ON/OFF Switches -->
+          <div id="strad-column-toggles-bar" class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+            <button type="button" id="btn-toggle-c1" onclick="toggleTradColumn('showCol1')" class="flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-bold transition bg-white border-brand-400 text-slate-800 shadow-sm">
+              <span>Cash Values</span>
+              <span id="badge-toggle-c1" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-brand-600 text-white">ON</span>
+            </button>
+
+            <button type="button" id="btn-toggle-c2" onclick="toggleTradColumn('showCol2')" class="flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-bold transition bg-white border-brand-400 text-slate-800 shadow-sm">
+              <span>Endowment Payouts</span>
+              <span id="badge-toggle-c2" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-brand-600 text-white">ON</span>
+            </button>
+
+            <button type="button" id="btn-toggle-c3" onclick="toggleTradColumn('showCol3')" class="flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-bold transition bg-white border-brand-400 text-slate-800 shadow-sm">
+              <span>Dividends</span>
+              <span id="badge-toggle-c3" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-brand-600 text-white">ON</span>
+            </button>
+          </div>
+
+          <!-- Schedule Inputs Body -->
+          <div id="strad-schedule-editor-body" class="space-y-2.5 pt-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-semibold text-slate-500">Customize active column labels &amp; policy year values</span>
+              <button type="button" onclick="addSingleTradMilestone()" class="text-[11px] font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Add Policy Year
+              </button>
+            </div>
+            <div id="strad-col-headers-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-2 pb-1">
+              <div id="wrap-strad-col1">
+                <label class="block text-[10px] font-bold text-slate-500">Cash Values Header</label>
+                <input type="text" id="strad-col1" oninput="syncSingleTradState()" class="w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-[11px] font-bold text-slate-700" />
+              </div>
+              <div id="wrap-strad-col2">
+                <label class="block text-[10px] font-bold text-brand-700">Endowment Payouts Header</label>
+                <input type="text" id="strad-col2" oninput="syncSingleTradState()" class="w-full rounded-lg border border-brand-300 bg-brand-50/40 px-2 py-1 text-[11px] font-bold text-brand-800" />
+              </div>
+              <div id="wrap-strad-col3">
+                <label class="block text-[10px] font-bold text-slate-500">Dividends Header</label>
+                <input type="text" id="strad-col3" oninput="syncSingleTradState()" class="w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-[11px] font-bold text-slate-700" />
+              </div>
+            </div>
+            <div id="strad-milestones-list" class="space-y-1.5"></div>
+          </div>
+
+          <!-- Message shown when all 3 are OFF -->
+          <div id="strad-schedule-off-notice" class="hidden rounded-xl border border-dashed border-brand-200 bg-brand-50/40 p-3 text-center">
+            <p class="text-xs font-semibold text-slate-700">Cash Values, Endowment Payouts &amp; Dividends section is turned OFF.</p>
+            <p class="text-[11px] text-slate-500 mt-0.5">This section will not appear on the client A4 proposal. Toggle any feature ON above to include it.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- SECTION C: MULTI-PROPOSAL COMPARISON EDITOR                         -->
+      <!-- =================================================================== -->
+      <section id="multi-plan-editor" class="hidden space-y-3 pt-3 border-t border-brand-100">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-brand-600 text-white text-xs flex items-center justify-center font-bold">2</span>
+            Plan Options (<span id="plan-count-badge">1</span>/10)
+          </h2>
+          <div class="flex items-center gap-1.5">
+            <button type="button" id="btn-clone-plan" onclick="cloneActivePlanOption()" title="Duplicate current plan option" class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold bg-white border border-brand-200 text-brand-700 hover:bg-brand-50 transition">
+              <i data-lucide="copy-plus" class="w-3.5 h-3.5"></i> Clone
+            </button>
+            <button type="button" id="btn-add-plan" onclick="addNewPlanOption()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-brand-600 text-white hover:bg-brand-700 transition shadow-sm">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Plan
+            </button>
+          </div>
+        </div>
+
+        <!-- Option Switcher Tabs -->
+        <div id="plan-tabs-bar" class="grid grid-cols-5 gap-1.5 bg-brand-50/70 p-1.5 rounded-xl border border-brand-200/80"></div>
+
+        <!-- Active Plan Form Card -->
+        <div id="active-plan-editor" class="rounded-2xl border border-brand-200/80 bg-white p-3.5 space-y-3 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-200">
+            <div class="flex items-center gap-2">
+              <span id="active-option-label" class="text-xs font-extrabold uppercase tracking-wider text-brand-700">Option A</span>
+              <button type="button" onclick="toggleRecommendedPlan()" id="btn-toggle-recommended" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold transition">
+                <i data-lucide="award" class="w-3.5 h-3.5"></i>
+                <span id="lbl-recommended">Recommended</span>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-1">
+              <button type="button" onclick="moveActivePlan(-1)" title="Move Left" class="p-1.5 rounded-lg text-slate-500 hover:text-brand-700 hover:bg-brand-50 transition">
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+              </button>
+              <button type="button" onclick="moveActivePlan(1)" title="Move Right" class="p-1.5 rounded-lg text-slate-500 hover:text-brand-700 hover:bg-brand-50 transition">
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </button>
+              <button type="button" onclick="removeActivePlan()" title="Remove Option" class="p-1.5 rounded-lg text-slate-400 hover:text-brand-600 hover:bg-brand-50 transition">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Plan / Product Name</label>
+              <input type="text" id="plan-inp-name" oninput="updateActivePlanField('name', this.value)" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-900 focus:outline-none focus:border-brand-500" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Plan Type (VUL or Traditional)</label>
+              <select id="plan-inp-type" onchange="updateActivePlanType(this.value)" class="w-full rounded-xl border border-brand-300 bg-brand-50/40 px-3 py-1.5 text-xs font-bold text-brand-700 focus:outline-none focus:border-brand-500">
+                <option value="Variable Unit Linked">VUL (Variable Unit Linked)</option>
+                <option value="Traditional">Traditional</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Provider / Subtype</label>
+              <input type="text" id="plan-inp-provider" oninput="updateActivePlanField('provider', this.value)" placeholder="e.g., Endowment / Equity" class="w-full rounded-xl border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-brand-500" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">MONTHLY PREMIUM</label>
+              <div class="flex rounded-xl border border-slate-300 bg-white overflow-hidden focus-within:border-brand-500">
+                <select id="plan-inp-currency" onchange="updateActivePlanCurrency(this.value)" title="Select Currency" class="bg-brand-50 border-r border-slate-300 px-1.5 py-1.5 text-[11px] font-bold text-brand-800 focus:outline-none cursor-pointer">
+                  <option value="PHP">₱ PHP</option>
+                  <option value="USD">$ USD</option>
+                </select>
+                <input type="text" id="plan-inp-premium" oninput="updateActivePlanPremium(this.value)" placeholder="3,500" class="w-full min-w-0 bg-white px-2 py-1.5 text-xs font-bold text-brand-700 focus:outline-none" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Frequency</label>
+              <select id="plan-inp-frequency" onchange="updateActivePlanField('frequency', this.value)" class="w-full rounded-xl border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:border-brand-500">
+                <option value="Monthly">Monthly</option>
+                <option value="Quarterly">Quarterly</option>
+                <option value="Semi-annual">Semi-annual</option>
+                <option value="Annual">Annual</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Payment Period</label>
+              <input type="text" id="plan-inp-paymentTerm" oninput="updateActivePlanField('paymentTerm', this.value)" placeholder="10 Years" class="w-full rounded-xl border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-brand-500" />
+            </div>
+          </div>
+
+          <!-- Benefit Comparison Values -->
+          <div class="pt-1 space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <span id="benefit-section-title" class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Benefit Comparison Values</span>
+              <button type="button" onclick="addCustomComparisonRow()" class="text-[11px] font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Add Benefit Row
+              </button>
+            </div>
+            <p class="text-[10px] text-slate-400">Drag rows, use arrows to reorder, or click any benefit name to rename it.</p>
+            <div id="active-plan-rows-editor" class="space-y-1.5"></div>
+          </div>
+
+          <!-- MULTI-PLAN CONDITIONAL SUB-SECTION A: VUL FUND VALUE PROJECTION -->
+          <div id="mplan-vul-proj-editor" class="rounded-2xl border border-brand-200 bg-brand-50/40 p-3 space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-xs font-bold text-brand-900 flex items-center gap-1.5">
+                <i data-lucide="bar-chart-3" class="w-4 h-4 text-brand-600"></i>
+                VUL Fund Value Projection Table (for this Option)
+              </span>
+              <div class="flex items-center gap-2">
+                <button type="button" id="btn-mplan-vul-toggle" onclick="toggleActivePlanVulProj()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-brand-600 text-white shadow-sm transition">
+                  Table: ON
+                </button>
+                <button type="button" onclick="addActivePlanVulProjRow()" class="text-[11px] font-bold text-brand-700 hover:text-brand-800 flex items-center gap-1">
+                  <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Add Year
+                </button>
+              </div>
+            </div>
+
+            <div id="mplan-vul-proj-body" class="space-y-2">
+              <div class="grid grid-cols-3 gap-2">
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-500">Low Rate Header</label>
+                  <input type="text" id="mplan-rateLow" oninput="updateActivePlanVulMeta('rateLow', this.value)" class="w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-[11px] font-bold text-slate-700" />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-brand-700">Mid Rate Header</label>
+                  <input type="text" id="mplan-rateMid" oninput="updateActivePlanVulMeta('rateMid', this.value)" class="w-full rounded-lg border border-brand-300 bg-white px-2 py-1 text-[11px] font-bold text-brand-700" />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-500">High Rate Header</label>
+                  <input type="text" id="mplan-rateHigh" oninput="updateActivePlanVulMeta('rateHigh', this.value)" class="w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-[11px] font-bold text-slate-700" />
+                </div>
+              </div>
+              <div id="mplan-vul-proj-list" class="space-y-1.5"></div>
+            </div>
+          </div>
+
+          <!-- MULTI-PLAN CONDITIONAL SUB-SECTION B: TRADITIONAL CASH VALUE, PAYOUT & DIVIDENDS -->
+          <div id="mplan-trad-sched-editor" class="hidden rounded-2xl border border-brand-200 bg-brand-50/40 p-3 space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-xs font-bold text-brand-900 flex items-center gap-1.5">
+                <i data-lucide="landmark" class="w-4 h-4 text-brand-600"></i>
+                Traditional Cash Value, Payout &amp; Dividends (for this Option)
+              </span>
+              <button type="button" id="btn-mplan-trad-master" onclick="toggleActivePlanTradMaster()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-brand-600 text-white shadow-sm transition">
+                Section: ON
+              </button>
+            </div>
+
+            <!-- Individual ON/OFF switches for Cash Value, Payout, Dividends -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <button type="button" id="btn-mplan-c1" onclick="toggleActivePlanTradCol('showCol1')" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition bg-white border-brand-400 text-slate-800 shadow-sm">
+                <span>Cash Value</span>
+                <span id="badge-mplan-c1" class="px-1.5 py-0.5 rounded-full text-[9px] font-extrabold bg-brand-600 text-white">ON</span>
+              </button>
+              <button type="button" id="btn-mplan-c2" onclick="toggleActivePlanTradCol('showCol2')" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition bg-white border-brand-400 text-slate-800 shadow-sm">
+                <span>Endowment Payout</span>
+                <span id="badge-mplan-c2" class="px-1.5 py-0.5 rounded-full text-[9px] font-extrabold bg-brand-600 text-white">ON</span>
+              </button>
+              <button type="button" id="btn-mplan-c3" onclick="toggleActivePlanTradCol('showCol3')" class="flex items-center justify-between px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition bg-white border-brand-400 text-slate-800 shadow-sm">
+                <span>Dividends</span>
+                <span id="badge-mplan-c3" class="px-1.5 py-0.5 rounded-full text-[9px] font-extrabold bg-brand-600 text-white">ON</span>
+              </button>
+            </div>
+
+            <div id="mplan-trad-sched-body" class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-semibold text-slate-500">Customize active column labels &amp; policy year values</span>
+                <button type="button" onclick="addActivePlanTradMilestone()" class="text-[11px] font-bold text-brand-700 hover:text-brand-800 flex items-center gap-1">
+                  <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Add Year
+                </button>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div id="wrap-mplan-col1">
+                  <label class="block text-[10px] font-bold text-slate-500">Cash Value Header</label>
+                  <input type="text" id="mplan-col1" oninput="updateActivePlanTradMeta('col1', this.value)" class="w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-[11px] font-bold text-slate-700" />
+                </div>
+                <div id="wrap-mplan-col2">
+                  <label class="block text-[10px] font-bold text-brand-700">Payout Header</label>
+                  <input type="text" id="mplan-col2" oninput="updateActivePlanTradMeta('col2', this.value)" class="w-full rounded-lg border border-brand-300 bg-white px-2 py-1 text-[11px] font-bold text-brand-800" />
+                </div>
+                <div id="wrap-mplan-col3">
+                  <label class="block text-[10px] font-bold text-slate-500">Dividends Header</label>
+                  <input type="text" id="mplan-col3" oninput="updateActivePlanTradMeta('col3', this.value)" class="w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-[11px] font-bold text-slate-700" />
+                </div>
+              </div>
+              <div id="mplan-trad-milestones-list" class="space-y-1.5"></div>
+            </div>
+
+            <div id="mplan-trad-off-notice" class="hidden rounded-xl border border-dashed border-brand-200 bg-white p-2.5 text-center">
+              <p class="text-[11px] font-semibold text-slate-600">Cash Value, Payout &amp; Dividends table is OFF for this option.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Advisor Recommendation & Footer -->
+      <section class="space-y-3 pt-3 border-t border-brand-100 pb-6">
+        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-brand-600 text-white text-xs flex items-center justify-center font-bold">3</span>
+          Advisor Recommendation &amp; Contact
+        </h2>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Advisor Key Takeaway / Recommendation</label>
+          <textarea id="inp-advisorNote" rows="2" oninput="syncSharedState()" placeholder="Summarize why this plan fits the client's goals..." class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs focus:outline-none focus:border-brand-500"></textarea>
+        </div>
+
+        <!-- Advisor Photo Control -->
+        <div class="rounded-xl border border-brand-100 bg-brand-50/40 p-3 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <img id="editor-advisor-avatar-preview" src="" alt="Advisor Photo" class="w-12 h-12 rounded-full object-cover object-top border-2 border-brand-600 shadow-sm bg-white" />
+            <div>
+              <p class="text-xs font-bold text-slate-800">Advisor Circular Profile Photo</p>
+              <p class="text-[11px] text-slate-500">Displayed in a circular frame beside your name &amp; title in the footer</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white border border-brand-200 text-brand-700 hover:bg-brand-50 transition">
+              <i data-lucide="upload" class="w-3.5 h-3.5 text-brand-600"></i>
+              <span>Change Photo</span>
+              <input type="file" accept="image/*" onchange="handleAdvisorPhotoUpload(event)" class="hidden" />
+            </label>
+            <button type="button" id="btn-toggle-advisor-photo" onclick="toggleAdvisorPhoto()" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-brand-600 text-white transition">
+              Photo: ON
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Advisor Name</label>
+            <input type="text" id="inp-advisorName" oninput="syncSharedState()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs focus:outline-none focus:border-brand-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Title / Credentials</label>
+            <input type="text" id="inp-advisorTitle" oninput="syncSharedState()" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs focus:outline-none focus:border-brand-500" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Phone Number</label>
+            <input type="text" id="inp-advisorPhone" oninput="syncSharedState()" placeholder="09760060604" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs focus:outline-none focus:border-brand-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Email Address</label>
+            <input type="email" id="inp-advisorEmail" oninput="syncSharedState()" placeholder="plukmarkison@gmail.com" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs focus:outline-none focus:border-brand-500" />
+          </div>
+        </div>
+      </section>
+    </aside>
+
+    <!-- CATEGORY 2: FULL-WIDTH EXECUTIVE A4 PREVIEW VIEW -->
+    <section id="preview-wrapper" class="hidden flex-1 w-full min-w-0 flex-col items-center justify-start p-3 sm:p-6 bg-slate-100 overflow-x-hidden overflow-y-auto">
+      <!-- Preview Controls Bar -->
+      <div id="preview-toolbar" class="no-print w-full max-w-[1123px] mb-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 bg-white px-3 py-2 rounded-xl border border-brand-200 shadow-sm">
+        <div class="flex items-center gap-2.5">
+          <button type="button" onclick="switchWorkspaceTab('editor')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-brand-50 text-brand-700 hover:bg-brand-100 border border-brand-200 transition">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+            <span>Back to Editor</span>
+          </button>
+          <span class="font-semibold flex items-center gap-1.5 text-slate-700">
+            <span class="w-2 h-2 rounded-full bg-brand-600 animate-pulse"></span>
+            <span id="toolbar-mode-label">Live A4 Preview</span>
+            <span id="zoom-indicator" class="ml-1 px-1.5 py-0.5 rounded bg-brand-50 text-[10px] font-bold text-brand-700">100%</span>
+          </span>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Zoom Scale Controls -->
+          <div class="inline-flex items-center bg-brand-50/70 p-0.5 rounded-lg border border-brand-200/80">
+            <button type="button" onclick="setPreviewZoom('fit')" id="btn-zoom-fit" class="px-2 py-1 rounded-md text-[11px] font-bold bg-brand-600 text-white shadow-sm transition">Fit</button>
+            <button type="button" onclick="setPreviewZoom(0.75)" id="btn-zoom-75" class="px-2 py-1 rounded-md text-[11px] font-bold text-slate-600 hover:text-brand-700 transition">75%</button>
+            <button type="button" onclick="setPreviewZoom(1)" id="btn-zoom-100" class="px-2 py-1 rounded-md text-[11px] font-bold text-slate-600 hover:text-brand-700 transition">100%</button>
+            <button type="button" onclick="setPreviewZoom(1.2)" id="btn-zoom-120" class="px-2 py-1 rounded-md text-[11px] font-bold text-slate-600 hover:text-brand-700 transition">120%</button>
+          </div>
+
+          <!-- Portrait / Landscape Orientation Toggle -->
+          <div class="inline-flex items-center bg-brand-50/70 p-0.5 rounded-lg border border-brand-200/80">
+            <button type="button" id="btn-orient-portrait" onclick="setOrientation('portrait', true)" class="px-2.5 py-1 rounded-md text-[11px] font-bold transition">Portrait A4</button>
+            <button type="button" id="btn-orient-landscape" onclick="setOrientation('landscape', true)" class="px-2.5 py-1 rounded-md text-[11px] font-bold transition">Landscape A4</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUTO-SCALED STAGE FOR A4 SHEET -->
+      <div id="sheet-scale-stage">
+        <!-- EXECUTIVE ONE-PAGER SHEET (RED & WHITE CORPORATE THEME) -->
+        <article id="one-pager-sheet" class="a4-sheet border border-brand-100">
+          <div class="flex flex-col flex-1 justify-between overflow-hidden">
+            <div>
+              <!-- Top Accent Bar (Crimson Red Gradient) -->
+              <div id="sheet-top-bar" class="h-2 w-full bg-gradient-to-r from-brand-800 via-brand-600 to-brand-500"></div>
+
+              <!-- Compact Executive Header (Crisp White & Soft Red Tint) -->
+              <header id="sheet-header" class="px-7 pt-4 pb-3.5 bg-gradient-to-br from-white via-white to-brand-50/60 border-b border-brand-100">
+                <div class="flex items-center justify-between gap-4">
+                  <div class="space-y-1">
+                    <div id="out-header-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-brand-600 text-white text-[9px] font-bold uppercase tracking-wider">
+                      Single Plan Spotlight &bull; VUL
+                    </div>
+                    <h1 id="out-docTitle" class="text-xl font-extrabold text-slate-900 tracking-tight leading-snug">
+                      Executive VUL Protection &amp; Wealth Proposal
+                    </h1>
+                  </div>
+
+                  <!-- Client Info Pill Box -->
+                  <div class="shrink-0 bg-white border border-brand-200 rounded-xl px-3.5 py-2 shadow-sm min-w-[210px]">
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="text-[9px] font-extrabold uppercase tracking-wider text-brand-600">Prepared For</span>
+                      <span id="out-proposalDate" class="text-[9px] font-semibold text-slate-400">Nov 16, 2026</span>
+                    </div>
+                    <p id="out-clientName" class="text-sm font-extrabold text-slate-900 leading-tight mt-0.5">Juan Dela Cruz</p>
+                    <p class="text-[10px] text-slate-500 mt-0.5">Profile / Age: <span id="out-clientProfile">34</span></p>
+                  </div>
+                </div>
+              </header>
+
+              <!-- =========================================================== -->
+              <!-- PREVIEW BODY A: SINGLE PLAN VUL SPOTLIGHT                   -->
+              <!-- =========================================================== -->
+              <div id="out-single-vul-body" class="px-7 py-4 space-y-3.5">
+                <div class="rounded-2xl border border-brand-700 bg-gradient-to-r from-brand-800 via-brand-700 to-brand-600 text-white p-4 shadow-sm">
+                  <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-white/15 text-white border border-white/25">
+                        Variable Unit-Linked (VUL) Proposal
+                      </span>
+                      <h2 id="out-svul-name" class="text-lg font-extrabold text-white mt-1">VUL Protection &amp; Wealth Plan</h2>
+                      <p id="out-svul-fund" class="text-xs text-brand-100 mt-0.5">Fund Strategy: Equity / Balanced Fund</p>
+                    </div>
+                    <div class="bg-white text-brand-900 rounded-xl px-3.5 py-2 text-right shadow-sm">
+                      <span class="text-[9px] font-extrabold uppercase tracking-wider text-brand-600 block">Regular Premium Outlay</span>
+                      <span id="out-svul-premium" class="text-lg font-extrabold text-brand-800">—</span>
+                      <span id="out-svul-freq-term" class="text-[10px] font-semibold text-slate-600 block">Monthly</span>
+                    </div>
+                  </div>
+                  <div class="mt-3 pt-2.5 border-t border-white/15 flex flex-wrap items-center justify-between gap-2 text-[11px] text-brand-100">
+                    <span>Coverage Horizon: <strong id="out-svul-coverage" class="text-white">—</strong></span>
+                    <span>Dual Benefit: <strong class="text-white">Life Protection + Living Investment Fund</strong></span>
+                  </div>
+                </div>
+
+                <!-- Protection & Riders Grid -->
+                <div id="out-svul-benefits-section" class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-brand-800">1. Protection Benefits &amp; Attached Riders</h3>
+                    <span class="text-[10px] font-semibold text-slate-500">Insurance Coverage Summary</span>
+                  </div>
+                  <div id="out-svul-benefits-grid" class="grid grid-cols-2 gap-2.5"></div>
+                </div>
+
+                <!-- Projected Fund Values Table (Policy Year only) -->
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <h3 id="out-svul-proj-heading" class="text-xs font-extrabold uppercase tracking-wider text-brand-800">2. Illustrated Fund Value Projections</h3>
+                    <span class="text-[10px] font-semibold text-brand-600">Non-Guaranteed Living Fund</span>
+                  </div>
+                  <div class="rounded-xl border border-brand-200 overflow-hidden shadow-sm">
+                    <table class="w-full border-collapse text-xs">
+                      <thead>
+                        <tr class="bg-brand-800 text-white text-[10px] font-extrabold uppercase tracking-wider">
+                          <th class="py-2 px-3 text-left border-r border-brand-700">Policy Year</th>
+                          <th id="out-svul-th-low" class="py-2 px-3 text-center border-r border-brand-700">Low (4%)</th>
+                          <th id="out-svul-th-mid" class="py-2 px-3 text-center border-r border-brand-700 bg-brand-600">Medium (8%)</th>
+                          <th id="out-svul-th-high" class="py-2 px-3 text-center">High (10%)</th>
+                        </tr>
+                      </thead>
+                      <tbody id="out-svul-proj-tbody" class="divide-y divide-brand-100"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- =========================================================== -->
+              <!-- PREVIEW BODY B: SINGLE PLAN TRADITIONAL SPOTLIGHT           -->
+              <!-- =========================================================== -->
+              <div id="out-single-trad-body" class="hidden px-7 py-4 space-y-3.5">
+                <div class="rounded-2xl border border-brand-800 bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 text-white p-4 shadow-sm">
+                  <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-white/15 text-white border border-white/25">
+                        Traditional Guaranteed Plan Proposal
+                      </span>
+                      <h2 id="out-strad-name" class="text-lg font-extrabold text-white mt-1">Traditional Guaranteed Plan</h2>
+                      <p id="out-strad-category" class="text-xs text-brand-100 mt-0.5">Category: Whole Life / Endowment</p>
+                    </div>
+                    <div class="bg-white text-brand-900 rounded-xl px-3.5 py-2 text-right shadow-sm">
+                      <span class="text-[9px] font-extrabold uppercase tracking-wider text-brand-600 block">Fixed Premium Outlay</span>
+                      <span id="out-strad-premium" class="text-lg font-extrabold text-brand-800">—</span>
+                      <span id="out-strad-freq-term" class="text-[10px] font-semibold text-slate-600 block">Monthly</span>
+                    </div>
+                  </div>
+                  <div class="mt-3 pt-2.5 border-t border-white/15 flex flex-wrap items-center justify-between gap-2 text-[11px] text-brand-100">
+                    <span>Maturity / Protection: <strong id="out-strad-maturity" class="text-white">—</strong></span>
+                    <span>Core Advantage: <strong class="text-white">Guaranteed Coverage &amp; Zero Market Risk</strong></span>
+                  </div>
+                </div>
+
+                <!-- Protection Benefits & Attached Riders Grid -->
+                <div id="out-strad-benefits-section" class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-brand-800">1. Protection Benefits &amp; Attached Riders</h3>
+                    <span class="text-[10px] font-semibold text-brand-600">Guaranteed Policy Coverage</span>
+                  </div>
+                  <div id="out-strad-benefits-grid" class="grid grid-cols-2 gap-2.5"></div>
+                </div>
+
+                <!-- Cash Values, Endowment Payouts & Dividends Table -->
+                <div id="out-strad-schedule-section" class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <h3 id="out-strad-schedule-heading" class="text-xs font-extrabold uppercase tracking-wider text-brand-800">2. Cash Values, Endowment Payouts &amp; Dividends</h3>
+                    <span class="text-[10px] font-semibold text-slate-500">Policy Milestone Schedule</span>
+                  </div>
+                  <div class="rounded-xl border border-brand-200 overflow-hidden shadow-sm">
+                    <table class="w-full border-collapse text-xs">
+                      <thead id="out-strad-milestones-thead"></thead>
+                      <tbody id="out-strad-milestones-tbody" class="divide-y divide-brand-100"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- =========================================================== -->
+              <!-- PREVIEW BODY C: MULTI-PROPOSAL COMPARISON MATRIX            -->
+              <!-- =========================================================== -->
+              <div id="out-multi-body" class="hidden px-7 py-3.5 space-y-3.5">
+                <!-- Side-by-Side Benefit Comparison Matrix -->
+                <div class="rounded-xl border border-brand-200 overflow-hidden shadow-sm">
+                  <table class="w-full border-collapse table-fixed">
+                    <thead id="out-comparison-thead"></thead>
+                    <tbody id="out-comparison-tbody" class="divide-y divide-brand-100"></tbody>
+                  </table>
+                </div>
+
+                <!-- Dynamic Per-Option Tables (VUL Fund Value Projection & Traditional Cash Value/Payout/Dividends) -->
+                <div id="out-multi-subtables-container" class="space-y-3"></div>
+              </div>
+
+              <!-- Shared Advisor Recommendation Callout -->
+              <div class="px-7 pb-3">
+                <div id="out-note-box" class="rounded-xl bg-brand-50 border border-brand-200 px-3.5 py-2.5 flex items-start gap-2.5">
+                  <div id="out-note-icon" class="w-6 h-6 rounded-lg bg-brand-600 text-white shrink-0 flex items-center justify-center mt-0.5">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                  </div>
+                  <div>
+                    <p id="out-note-title" class="text-[9px] font-extrabold text-brand-800 uppercase tracking-wider">Advisor Recommendation &amp; Key Takeaway</p>
+                    <p id="out-advisorNote" class="text-xs text-slate-700 leading-relaxed mt-0.5"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Footer: Advisor Signature & Disclaimer (Red & White Theme) -->
+            <footer id="sheet-footer" class="px-7 py-2.5 bg-white border-t border-brand-100">
+              <div class="flex items-center justify-between gap-3 text-xs">
+                <div class="flex items-center gap-3">
+                  <div id="out-advisorAvatarWrap" class="w-12 h-12 rounded-full overflow-hidden border-2 border-brand-600 shadow-sm shrink-0 bg-brand-50">
+                    <img id="out-advisorAvatar" src="" alt="Advisor Portrait" class="w-full h-full object-cover object-top" />
+                  </div>
+                  <div>
+                    <p id="out-advisorName" class="font-bold text-slate-900 text-sm">Mark Isaac Ison</p>
+                    <p id="out-advisorTitle" class="text-brand-700 font-medium text-xs">Financial Services Consultant &bull; Pru Life UK</p>
+                  </div>
+                </div>
+                <div class="text-right space-y-0.5">
+                  <p class="text-[9px] font-bold uppercase tracking-wider text-brand-600">Direct Advisor Contact</p>
+                  <p id="out-advisorPhone" class="text-xs font-semibold text-slate-800">09760060604</p>
+                  <p id="out-advisorEmail" class="text-[11px] font-medium text-slate-600">plukmarkison@gmail.com</p>
+                </div>
+              </div>
+              <p class="text-[8.5px] text-slate-400 mt-1.5 pt-1.5 border-t border-brand-100 leading-normal">
+                Disclaimer: This proposal summary is prepared exclusively for client discussion purposes. Non-guaranteed fund values and dividends are illustrative and depend on actual company performance. Refer to the official Policy Illustration and Contract for full terms, exclusions, and riders.
+              </p>
+            </footer>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // =========================================================================
+    // 1. STATE STRUCTURE (MULTI-PROPOSAL + SINGLE VUL + SINGLE TRADITIONAL)
+    // =========================================================================
+    const MAX_PLANS = 10;
+    const OPTION_LABELS = [
+      'Option A', 'Option B', 'Option C', 'Option D', 'Option E',
+      'Option F', 'Option G', 'Option H', 'Option I', 'Option J'
+    ];
+    const OPTION_SHORT_LABELS = [
+      'Opt A', 'Opt B', 'Opt C', 'Opt D', 'Opt E',
+      'Opt F', 'Opt G', 'Opt H', 'Opt I', 'Opt J'
+    ];
+
+    function createDefaultMultiPlan(index = 0) {
+      const isVulDefault = index % 2 === 0;
+      return {
+        name: `Option ${String.fromCharCode(65 + index)}`,
+        type: isVulDefault ? 'Variable Unit Linked' : 'Traditional',
+        provider: '',
+        currency: 'PHP',
+        premium: '',
+        frequency: 'Monthly',
+        paymentTerm: '',
+        recommended: index === 0,
+        isVul: isVulDefault,
+        rowOrder: [],
+        rows: {
+          'MONTHLY PREMIUM': '',
+          'Frequency': 'Monthly',
+          'Payment Period': ''
+        },
+        showVulProj: true,
+        rateLow: 'Low (4%)',
+        rateMid: 'Medium (8%)',
+        rateHigh: 'High (10%)',
+        projections: [
+          { year: 'Year 5', low: '', mid: '', high: '' },
+          { year: 'Year 10', low: '', mid: '', high: '' },
+          { year: 'Year 15', low: '', mid: '', high: '' },
+          { year: 'Year 20', low: '', mid: '', high: '' }
+        ],
+        showCol1: true,
+        showCol2: true,
+        showCol3: true,
+        col1: 'Cash Values',
+        col2: 'Endowment Payouts',
+        col3: 'Dividends',
+        milestones: [
+          { year: 'Year 5', c1: '', c2: '', c3: '' },
+          { year: 'Year 10', c1: '', c2: '', c3: '' },
+          { year: 'Year 15', c1: '', c2: '', c3: '' },
+          { year: 'Year 20', c1: '', c2: '', c3: '' }
+        ]
+      };
+    }
+
+    let appState = {
+      studioMode: 'single-vul', // 'single-vul' | 'single-trad' | 'multi'
+      docTitle: '',
+      clientName: '',
+      clientProfile: '',
+      proposalDate: new Date().toISOString().split('T')[0],
+      advisorNote: '',
+      advisorName: 'Mark Isaac Ison',
+      advisorTitle: 'Financial Services Consultant • Pru Life UK',
+      advisorPhone: '09760060604',
+      advisorEmail: 'plukmarkison@gmail.com',
+      showAdvisorPhoto: true,
+      advisorPhoto: 'data:image/jpeg;base64,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',
+      activePlanIndex: 0,
+      orientation: 'portrait',
+      zoomMode: 'fit',
+
+      // Single VUL State
+      singleVul: {
+        name: '',
+        fund: '',
+        currency: 'PHP',
+        premium: '',
+        frequency: 'Monthly',
+        payTerm: '',
+        coverageAge: '',
+        rateLow: 'Low (4%)',
+        rateMid: 'Medium (8%)',
+        rateHigh: 'High (10%)',
+        benefits: [],
+        projections: [
+          { year: 'Year 5', low: '', mid: '', high: '' },
+          { year: 'Year 10', low: '', mid: '', high: '' },
+          { year: 'Year 15', low: '', mid: '', high: '' },
+          { year: 'Year 20', low: '', mid: '', high: '' }
+        ]
+      },
+
+      // Single Traditional State
+      singleTrad: {
+        name: '',
+        category: '',
+        currency: 'PHP',
+        premium: '',
+        frequency: 'Monthly',
+        payTerm: '',
+        maturity: '',
+        showCol1: true,
+        showCol2: true,
+        showCol3: true,
+        col1: 'Cash Values',
+        col2: 'Endowment Payouts',
+        col3: 'Dividends',
+        benefits: [],
+        milestones: [
+          { year: 'Year 5', c1: '', c2: '', c3: '' },
+          { year: 'Year 10', c1: '', c2: '', c3: '' },
+          { year: 'Year 15', c1: '', c2: '', c3: '' },
+          { year: 'Year 20', c1: '', c2: '', c3: '' }
+        ]
+      },
+
+      // Multi-Proposal Comparison State
+      plans: [
+        createDefaultMultiPlan(0)
+      ]
+    };
+
+    let draggedRowIndex = null;
+
+    // =========================================================================
+    // 2. INITIALIZATION & STUDIO MODE SWITCHER
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+      loadStateToForm();
+      renderAll();
+      window.addEventListener('resize', applyPreviewScaling);
+    });
+
+    function switchStudioMode(mode) {
+      appState.studioMode = mode;
+      if (mode === 'single-vul' || mode === 'single-trad') {
+        appState.orientation = 'portrait';
+      }
+      renderAll();
+      const labels = {
+        'single-vul': 'Switched to Single Plan: VUL Spotlight',
+        'single-trad': 'Switched to Single Plan: Traditional Spotlight',
+        'multi': 'Switched to Multi-Proposal Comparison'
+      };
+      showToast(labels[mode] || 'Mode updated', 'info');
+    }
+
+    function updateModeButtonsUI() {
+      const mode = appState.studioMode;
+      const btnVul = document.getElementById('mode-btn-single-vul');
+      const btnTrad = document.getElementById('mode-btn-single-trad');
+      const btnMulti = document.getElementById('mode-btn-multi');
+      const headerPill = document.getElementById('header-mode-pill');
+      const previewBadge = document.getElementById('header-preview-badge');
+
+      const activeClass = 'text-left p-3 rounded-xl border transition flex flex-col justify-between gap-1.5 bg-white text-brand-900 border-white shadow-md';
+      const inactiveClass = 'text-left p-3 rounded-xl border transition flex flex-col justify-between gap-1.5 bg-white/10 text-white border-white/20 hover:bg-white/20';
+
+      btnVul.className = mode === 'single-vul' ? activeClass : inactiveClass;
+      btnTrad.className = mode === 'single-trad' ? activeClass : inactiveClass;
+      btnMulti.className = mode === 'multi' ? activeClass : inactiveClass;
+
+      // Update inner icon/text colors dynamically for active vs inactive white/red cards
+      [
+        { btn: btnVul, active: mode === 'single-vul' },
+        { btn: btnTrad, active: mode === 'single-trad' },
+        { btn: btnMulti, active: mode === 'multi' }
+      ].forEach(item => {
+        const icon = item.btn.querySelector('i');
+        const pill = item.btn.querySelector('span:last-child');
+        const desc = item.btn.querySelector('p');
+        if (item.active) {
+          if (icon) icon.className = 'w-4 h-4 text-brand-600';
+          if (pill) pill.className = 'px-1.5 py-0.5 rounded text-[9px] font-bold bg-brand-100 text-brand-700';
+          if (desc) desc.className = 'text-[11px] text-slate-600 leading-snug';
+        } else {
+          if (icon) icon.className = 'w-4 h-4 text-brand-200';
+          if (pill) pill.className = 'px-1.5 py-0.5 rounded text-[9px] font-bold bg-white/20 text-white';
+          if (desc) desc.className = 'text-[11px] text-brand-100 leading-snug';
+        }
+      });
+
+      document.getElementById('single-vul-editor').classList.toggle('hidden', mode !== 'single-vul');
+      document.getElementById('single-trad-editor').classList.toggle('hidden', mode !== 'single-trad');
+      document.getElementById('multi-plan-editor').classList.toggle('hidden', mode !== 'multi');
+
+      if (mode === 'single-vul') {
+        headerPill.textContent = 'Single Plan: VUL';
+        previewBadge.textContent = '(VUL)';
+      } else if (mode === 'single-trad') {
+        headerPill.textContent = 'Single Plan: Traditional';
+        previewBadge.textContent = '(Trad)';
+      } else {
+        headerPill.textContent = 'Multi-Proposal Mode';
+        previewBadge.textContent = `(${appState.plans.length})`;
+      }
+    }
+
+    function resetCurrentMode() {
+      if (appState.studioMode === 'single-vul') {
+        appState.singleVul = {
+          name: '',
+          fund: '',
+          currency: 'PHP',
+          premium: '',
+          frequency: 'Monthly',
+          payTerm: '',
+          coverageAge: '',
+          rateLow: 'Low (4%)',
+          rateMid: 'Medium (8%)',
+          rateHigh: 'High (10%)',
+          benefits: [],
+          projections: [
+            { year: 'Year 5', low: '', mid: '', high: '' },
+            { year: 'Year 10', low: '', mid: '', high: '' },
+            { year: 'Year 15', low: '', mid: '', high: '' },
+            { year: 'Year 20', low: '', mid: '', high: '' }
+          ]
+        };
+      } else if (appState.studioMode === 'single-trad') {
+        appState.singleTrad = {
+          name: '',
+          category: '',
+          currency: 'PHP',
+          premium: '',
+          frequency: 'Monthly',
+          payTerm: '',
+          maturity: '',
+          showCol1: true,
+          showCol2: true,
+          showCol3: true,
+          col1: 'Cash Values',
+          col2: 'Endowment Payouts',
+          col3: 'Dividends',
+          benefits: [],
+          milestones: [
+            { year: 'Year 5', c1: '', c2: '', c3: '' },
+            { year: 'Year 10', c1: '', c2: '', c3: '' },
+            { year: 'Year 15', c1: '', c2: '', c3: '' },
+            { year: 'Year 20', c1: '', c2: '', c3: '' }
+          ]
+        };
+      } else {
+        appState.activePlanIndex = 0;
+        appState.plans = [createDefaultMultiPlan(0)];
+      }
+      loadStateToForm();
+      renderAll();
+      showToast('Fields cleared for current section.', 'info');
+    }
+
+    function loadStateToForm() {
+      document.getElementById('inp-docTitle').value = appState.docTitle || '';
+      document.getElementById('inp-clientName').value = appState.clientName || '';
+      document.getElementById('inp-clientProfile').value = appState.clientProfile || '';
+      document.getElementById('inp-proposalDate').value = appState.proposalDate || '';
+      document.getElementById('inp-advisorNote').value = appState.advisorNote || '';
+      document.getElementById('inp-advisorName').value = appState.advisorName || '';
+      document.getElementById('inp-advisorTitle').value = appState.advisorTitle || '';
+      document.getElementById('inp-advisorPhone').value = appState.advisorPhone || '';
+      document.getElementById('inp-advisorEmail').value = appState.advisorEmail || '';
+      updateAdvisorPhotoUI();
+
+      const sv = appState.singleVul;
+      document.getElementById('svul-name').value = sv.name || '';
+      document.getElementById('svul-fund').value = sv.fund || '';
+      document.getElementById('svul-currency').value = sv.currency || 'PHP';
+      document.getElementById('svul-premium').value = sv.premium || '';
+      document.getElementById('svul-frequency').value = sv.frequency || 'Monthly';
+      document.getElementById('svul-payTerm').value = sv.payTerm || '';
+      document.getElementById('svul-coverageAge').value = sv.coverageAge || '';
+      document.getElementById('svul-rateLow').value = sv.rateLow || 'Low (4%)';
+      document.getElementById('svul-rateMid').value = sv.rateMid || 'Medium (8%)';
+      document.getElementById('svul-rateHigh').value = sv.rateHigh || 'High (10%)';
+
+      const st = appState.singleTrad;
+      document.getElementById('strad-name').value = st.name || '';
+      document.getElementById('strad-category').value = st.category || '';
+      document.getElementById('strad-currency').value = st.currency || 'PHP';
+      document.getElementById('strad-premium').value = st.premium || '';
+      document.getElementById('strad-frequency').value = st.frequency || 'Monthly';
+      document.getElementById('strad-payTerm').value = st.payTerm || '';
+      document.getElementById('strad-maturity').value = st.maturity || '';
+      document.getElementById('strad-col1').value = st.col1 || 'Cash Values';
+      document.getElementById('strad-col2').value = st.col2 || 'Endowment Payouts';
+      document.getElementById('strad-col3').value = st.col3 || 'Dividends';
+    }
+
+    function syncSharedState() {
+      appState.docTitle = document.getElementById('inp-docTitle').value;
+      appState.clientName = document.getElementById('inp-clientName').value;
+      appState.clientProfile = document.getElementById('inp-clientProfile').value;
+      appState.proposalDate = document.getElementById('inp-proposalDate').value;
+      appState.advisorNote = document.getElementById('inp-advisorNote').value;
+      appState.advisorName = document.getElementById('inp-advisorName').value;
+      appState.advisorTitle = document.getElementById('inp-advisorTitle').value;
+      appState.advisorPhone = document.getElementById('inp-advisorPhone').value;
+      appState.advisorEmail = document.getElementById('inp-advisorEmail').value;
+      renderPreviewSheet();
+    }
+
+    function updateAdvisorPhotoUI() {
+      const edPrev = document.getElementById('editor-advisor-avatar-preview');
+      const btn = document.getElementById('btn-toggle-advisor-photo');
+      if (edPrev && appState.advisorPhoto) {
+        edPrev.src = appState.advisorPhoto;
+      }
+      if (btn) {
+        if (appState.showAdvisorPhoto) {
+          btn.className = 'px-2.5 py-1.5 rounded-lg text-xs font-bold bg-brand-600 text-white transition';
+          btn.textContent = 'Photo: ON';
+        } else {
+          btn.className = 'px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-200 text-slate-600 transition';
+          btn.textContent = 'Photo: OFF';
+        }
+      }
+    }
+
+    function toggleAdvisorPhoto() {
+      appState.showAdvisorPhoto = !appState.showAdvisorPhoto;
+      updateAdvisorPhotoUI();
+      renderPreviewSheet();
+    }
+
+    function handleAdvisorPhotoUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        appState.advisorPhoto = e.target.result;
+        appState.showAdvisorPhoto = true;
+        updateAdvisorPhotoUI();
+        renderPreviewSheet();
+        showToast('Advisor profile photo updated!', 'success');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function formatDisplayDate(dateStr) {
+      if (!dateStr) return 'Nov 16, 2026';
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+        if (!isNaN(d.getTime())) {
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+      }
+      return dateStr;
+    }
+
+    function formatPremiumWithCurrency(rawVal, currency) {
+      const cleaned = (rawVal || '').replace(/^[₱$]\s*/, '').trim();
+      if (!cleaned) return '';
+      const symbol = currency === 'USD' ? '$' : '₱';
+      return `${symbol}${cleaned}`;
+    }
+
+    // =========================================================================
+    // 3. SINGLE VUL & SINGLE TRADITIONAL EDITOR HANDLERS
+    // =========================================================================
+    function syncSingleVulState() {
+      const sv = appState.singleVul;
+      sv.name = document.getElementById('svul-name').value;
+      sv.fund = document.getElementById('svul-fund').value;
+      sv.frequency = document.getElementById('svul-frequency').value;
+      sv.payTerm = document.getElementById('svul-payTerm').value;
+      sv.coverageAge = document.getElementById('svul-coverageAge').value;
+      sv.rateLow = document.getElementById('svul-rateLow').value;
+      sv.rateMid = document.getElementById('svul-rateMid').value;
+      sv.rateHigh = document.getElementById('svul-rateHigh').value;
+      renderPreviewSheet();
+    }
+
+    function syncSingleVulCurrency() {
+      const sv = appState.singleVul;
+      sv.currency = document.getElementById('svul-currency').value;
+      if (sv.premium) {
+        sv.premium = formatPremiumWithCurrency(sv.premium, sv.currency);
+        document.getElementById('svul-premium').value = sv.premium;
+      }
+      renderPreviewSheet();
+    }
+
+    function syncSingleVulPremium() {
+      const sv = appState.singleVul;
+      const inp = document.getElementById('svul-premium');
+      sv.premium = formatPremiumWithCurrency(inp.value, sv.currency);
+      if (inp.value !== sv.premium) inp.value = sv.premium;
+      renderPreviewSheet();
+    }
+
+    function renderSingleVulEditorLists() {
+      const sv = appState.singleVul;
+      const bContainer = document.getElementById('svul-benefits-list');
+      if (sv.benefits.length === 0) {
+        bContainer.innerHTML = `
+          <div class="rounded-xl border border-dashed border-brand-200 bg-brand-50/30 p-3 text-center">
+            <p class="text-[11px] font-medium text-slate-600">No protection benefits or riders added yet.</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">Click <span class="font-semibold text-brand-600">+ Add Benefit</span> above to enter your coverage details.</p>
+          </div>
+        `;
+      } else {
+        bContainer.innerHTML = sv.benefits.map((b, i) => `
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-1.5 bg-white p-2 rounded-xl border border-slate-200 items-center">
+            <input type="text" value="${escapeHtml(b.label)}" oninput="appState.singleVul.benefits[${i}].label=this.value; renderPreviewSheet();" placeholder="Benefit Name (e.g., Life Coverage)" class="sm:col-span-4 rounded-lg border border-slate-300 px-2 py-1 text-xs font-bold text-slate-800" />
+            <input type="text" value="${escapeHtml(b.value)}" oninput="appState.singleVul.benefits[${i}].value=this.value; renderPreviewSheet();" placeholder="Amount (e.g., ₱2,000,000)" class="sm:col-span-3 rounded-lg border border-brand-300 bg-brand-50/30 px-2 py-1 text-xs font-extrabold text-brand-700" />
+            <input type="text" value="${escapeHtml(b.note)}" oninput="appState.singleVul.benefits[${i}].note=this.value; renderPreviewSheet();" placeholder="Description (optional)" class="sm:col-span-4 rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-600" />
+            <button type="button" onclick="removeSingleVulBenefit(${i})" title="Remove Benefit" class="sm:col-span-1 text-slate-400 hover:text-brand-600 flex justify-center p-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+          </div>
+        `).join('');
+      }
+
+      const pContainer = document.getElementById('svul-projections-list');
+      pContainer.innerHTML = sv.projections.map((p, i) => `
+        <div class="grid grid-cols-12 gap-1.5 bg-white p-2 rounded-xl border border-slate-200 items-center">
+          <input type="text" value="${escapeHtml(p.year)}" oninput="appState.singleVul.projections[${i}].year=this.value; renderPreviewSheet();" placeholder="Year 5" class="col-span-3 rounded-lg border border-slate-300 px-2 py-1 text-xs font-bold text-slate-800" />
+          <input type="text" value="${escapeHtml(p.low)}" oninput="appState.singleVul.projections[${i}].low=this.value; renderPreviewSheet();" placeholder="Low" class="col-span-3 rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700" />
+          <input type="text" value="${escapeHtml(p.mid)}" oninput="appState.singleVul.projections[${i}].mid=this.value; renderPreviewSheet();" placeholder="Medium" class="col-span-3 rounded-lg border border-brand-300 bg-brand-50/40 px-2 py-1 text-xs font-bold text-brand-800" />
+          <input type="text" value="${escapeHtml(p.high)}" oninput="appState.singleVul.projections[${i}].high=this.value; renderPreviewSheet();" placeholder="High" class="col-span-2 rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700" />
+          <button type="button" onclick="removeSingleVulProjectionRow(${i})" title="Remove Row" class="col-span-1 text-slate-400 hover:text-brand-600 flex justify-center p-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+        </div>
+      `).join('');
+    }
+
+    function addSingleVulBenefit() {
+      appState.singleVul.benefits.push({ label: '', value: '', note: '' });
+      renderAll();
+    }
+    function removeSingleVulBenefit(idx) {
+      appState.singleVul.benefits.splice(idx, 1);
+      renderAll();
+    }
+    function addSingleVulProjectionRow() {
+      appState.singleVul.projections.push({ year: '', low: '', mid: '', high: '' });
+      renderAll();
+    }
+    function removeSingleVulProjectionRow(idx) {
+      if (appState.singleVul.projections.length <= 1) return;
+      appState.singleVul.projections.splice(idx, 1);
+      renderAll();
+    }
+
+    // Single Traditional Handlers & ON/OFF Toggles
+    function toggleTradColumn(colProp) {
+      const st = appState.singleTrad;
+      st[colProp] = !st[colProp];
+      renderAll();
+    }
+
+    function toggleTradAllSchedule() {
+      const st = appState.singleTrad;
+      const anyOn = st.showCol1 || st.showCol2 || st.showCol3;
+      const newState = !anyOn;
+      st.showCol1 = newState;
+      st.showCol2 = newState;
+      st.showCol3 = newState;
+      renderAll();
+    }
+
+    function updateTradTogglesUI() {
+      const st = appState.singleTrad;
+      const anyOn = st.showCol1 || st.showCol2 || st.showCol3;
+
+      const masterBtn = document.getElementById('btn-strad-master-toggle');
+      const masterLbl = document.getElementById('lbl-strad-master-toggle');
+      if (anyOn) {
+        masterBtn.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-brand-600 text-white shadow-sm transition';
+        masterLbl.textContent = 'Section: ON';
+      } else {
+        masterBtn.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-200 text-slate-600 hover:bg-slate-300 transition';
+        masterLbl.textContent = 'Section: OFF';
+      }
+
+      const configs = [
+        { key: 'showCol1', btnId: 'btn-toggle-c1', badgeId: 'badge-toggle-c1', wrapId: 'wrap-strad-col1' },
+        { key: 'showCol2', btnId: 'btn-toggle-c2', badgeId: 'badge-toggle-c2', wrapId: 'wrap-strad-col2' },
+        { key: 'showCol3', btnId: 'btn-toggle-c3', badgeId: 'badge-toggle-c3', wrapId: 'wrap-strad-col3' }
+      ];
+
+      configs.forEach(cfg => {
+        const isOn = !!st[cfg.key];
+        const btn = document.getElementById(cfg.btnId);
+        const badge = document.getElementById(cfg.badgeId);
+        const wrap = document.getElementById(cfg.wrapId);
+        if (isOn) {
+          btn.className = 'flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-bold transition bg-white border-brand-400 text-slate-800 shadow-sm';
+          badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-brand-600 text-white';
+          badge.textContent = 'ON';
+          if (wrap) wrap.classList.remove('hidden');
+        } else {
+          btn.className = 'flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-bold transition bg-slate-100 border-slate-200 text-slate-400';
+          badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-200 text-slate-500';
+          badge.textContent = 'OFF';
+          if (wrap) wrap.classList.add('hidden');
+        }
+      });
+
+      document.getElementById('strad-schedule-editor-body').classList.toggle('hidden', !anyOn);
+      document.getElementById('strad-schedule-off-notice').classList.toggle('hidden', anyOn);
+    }
+
+    function syncSingleTradState() {
+      const st = appState.singleTrad;
+      st.name = document.getElementById('strad-name').value;
+      st.category = document.getElementById('strad-category').value;
+      st.frequency = document.getElementById('strad-frequency').value;
+      st.payTerm = document.getElementById('strad-payTerm').value;
+      st.maturity = document.getElementById('strad-maturity').value;
+      st.col1 = document.getElementById('strad-col1').value;
+      st.col2 = document.getElementById('strad-col2').value;
+      st.col3 = document.getElementById('strad-col3').value;
+      renderPreviewSheet();
+    }
+
+    function syncSingleTradCurrency() {
+      const st = appState.singleTrad;
+      st.currency = document.getElementById('strad-currency').value;
+      if (st.premium) {
+        st.premium = formatPremiumWithCurrency(st.premium, st.currency);
+        document.getElementById('strad-premium').value = st.premium;
+      }
+      renderPreviewSheet();
+    }
+
+    function syncSingleTradPremium() {
+      const st = appState.singleTrad;
+      const inp = document.getElementById('strad-premium');
+      st.premium = formatPremiumWithCurrency(inp.value, st.currency);
+      if (inp.value !== st.premium) inp.value = st.premium;
+      renderPreviewSheet();
+    }
+
+    function renderSingleTradEditorLists() {
+      const st = appState.singleTrad;
+      updateTradTogglesUI();
+
+      const bContainer = document.getElementById('strad-benefits-list');
+      if (st.benefits.length === 0) {
+        bContainer.innerHTML = `
+          <div class="rounded-xl border border-dashed border-brand-200 bg-brand-50/30 p-3 text-center">
+            <p class="text-[11px] font-medium text-slate-600">No protection benefits or riders added yet.</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">Click <span class="font-semibold text-brand-600">+ Add Benefit</span> above to enter your coverage details.</p>
+          </div>
+        `;
+      } else {
+        bContainer.innerHTML = st.benefits.map((b, i) => `
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-1.5 bg-white p-2 rounded-xl border border-slate-200 items-center">
+            <input type="text" value="${escapeHtml(b.label)}" oninput="appState.singleTrad.benefits[${i}].label=this.value; renderPreviewSheet();" placeholder="Benefit Name (e.g., Life Coverage)" class="sm:col-span-4 rounded-lg border border-slate-300 px-2 py-1 text-xs font-bold text-slate-800" />
+            <input type="text" value="${escapeHtml(b.value)}" oninput="appState.singleTrad.benefits[${i}].value=this.value; renderPreviewSheet();" placeholder="Amount (e.g., ₱1,500,000)" class="sm:col-span-3 rounded-lg border border-brand-300 bg-brand-50/30 px-2 py-1 text-xs font-extrabold text-brand-800" />
+            <input type="text" value="${escapeHtml(b.note)}" oninput="appState.singleTrad.benefits[${i}].note=this.value; renderPreviewSheet();" placeholder="Description (optional)" class="sm:col-span-4 rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-600" />
+            <button type="button" onclick="removeSingleTradBenefit(${i})" title="Remove Benefit" class="sm:col-span-1 text-slate-400 hover:text-brand-600 flex justify-center p-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+          </div>
+        `).join('');
+      }
+
+      const mContainer = document.getElementById('strad-milestones-list');
+      mContainer.innerHTML = st.milestones.map((m, i) => `
+        <div class="flex flex-wrap sm:flex-nowrap items-center gap-1.5 bg-white p-2 rounded-xl border border-slate-200">
+          <input type="text" value="${escapeHtml(m.year)}" oninput="appState.singleTrad.milestones[${i}].year=this.value; renderPreviewSheet();" placeholder="Year 5" class="w-24 sm:w-28 shrink-0 rounded-lg border border-slate-300 px-2 py-1 text-xs font-bold text-slate-800" />
+          ${st.showCol1 ? `<input type="text" value="${escapeHtml(m.c1)}" oninput="appState.singleTrad.milestones[${i}].c1=this.value; renderPreviewSheet();" placeholder="Cash Value" class="flex-1 min-w-0 rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700" />` : ''}
+          ${st.showCol2 ? `<input type="text" value="${escapeHtml(m.c2)}" oninput="appState.singleTrad.milestones[${i}].c2=this.value; renderPreviewSheet();" placeholder="Endowment Payout" class="flex-1 min-w-0 rounded-lg border border-brand-300 bg-brand-50/40 px-2 py-1 text-xs font-bold text-brand-800" />` : ''}
+          ${st.showCol3 ? `<input type="text" value="${escapeHtml(m.c3)}" oninput="appState.singleTrad.milestones[${i}].c3=this.value; renderPreviewSheet();" placeholder="Dividends" class="flex-1 min-w-0 rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700" />` : ''}
+          <button type="button" onclick="removeSingleTradMilestone(${i})" title="Remove Row" class="text-slate-400 hover:text-brand-600 shrink-0 p-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+        </div>
+      `).join('');
+    }
+
+    function addSingleTradBenefit() {
+      appState.singleTrad.benefits.push({ label: '', value: '', note: '' });
+      renderAll();
+    }
+    function removeSingleTradBenefit(idx) {
+      appState.singleTrad.benefits.splice(idx, 1);
+      renderAll();
+    }
+    function addSingleTradMilestone() {
+      appState.singleTrad.milestones.push({ year: '', c1: '', c2: '', c3: '' });
+      renderAll();
+    }
+    function removeSingleTradMilestone(idx) {
+      if (appState.singleTrad.milestones.length <= 1) return;
+      appState.singleTrad.milestones.splice(idx, 1);
+      renderAll();
+    }
+
+    // =========================================================================
+    // 4. MASTER RENDER ENGINE
+    // =========================================================================
+    function renderAll() {
+      updateModeButtonsUI();
+      renderSingleVulEditorLists();
+      renderSingleTradEditorLists();
+      renderPlanTabs();
+      renderActivePlanEditor();
+      renderPreviewSheet();
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    }
+
+    function renderPlanTabs() {
+      const bar = document.getElementById('plan-tabs-bar');
+      document.getElementById('plan-count-badge').textContent = appState.plans.length;
+
+      let html = '';
+      appState.plans.forEach((plan, idx) => {
+        const isActive = idx === appState.activePlanIndex;
+        const shortLbl = OPTION_SHORT_LABELS[idx] || `Opt ${idx+1}`;
+        const recBadge = plan.recommended ? ' ★' : '';
+        const typeTag = plan.type === 'Traditional' ? 'Trad' : 'VUL';
+
+        let btnClass = 'flex flex-col items-center justify-center p-2 rounded-lg text-xs font-bold transition truncate ';
+        if (isActive) {
+          btnClass += 'bg-brand-600 text-white shadow-sm ring-1 ring-brand-700/30';
+        } else {
+          btnClass += 'bg-white text-slate-700 hover:bg-brand-50 hover:text-brand-700 border border-brand-100';
+        }
+
+        const subTextClass = isActive ? 'text-brand-100' : 'text-slate-400';
+
+        html += `
+          <button type="button" onclick="setActivePlanIndex(${idx})" class="${btnClass}">
+            <span class="truncate w-full text-center">${shortLbl}${recBadge}</span>
+            <span class="text-[9px] font-normal ${subTextClass} truncate w-full text-center">${escapeHtml(plan.name || 'Untitled')} (${typeTag})</span>
+          </button>
+        `;
+      });
+      bar.innerHTML = html;
+      bar.style.gridTemplateColumns = `repeat(${Math.min(appState.plans.length, 5)}, minmax(0, 1fr))`;
+    }
+
+    function renderActivePlanEditor() {
+      if (appState.plans.length === 0) return;
+      if (appState.activePlanIndex >= appState.plans.length) {
+        appState.activePlanIndex = appState.plans.length - 1;
+      }
+
+      const plan = appState.plans[appState.activePlanIndex];
+      const optLabel = OPTION_LABELS[appState.activePlanIndex] || `Option ${appState.activePlanIndex + 1}`;
+      const isVul = plan.type !== 'Traditional';
+
+      document.getElementById('active-option-label').textContent = optLabel;
+      document.getElementById('plan-inp-name').value = plan.name || '';
+      document.getElementById('plan-inp-type').value = plan.type || 'Variable Unit Linked';
+      document.getElementById('plan-inp-provider').value = plan.provider || '';
+      document.getElementById('plan-inp-currency').value = plan.currency || 'PHP';
+      document.getElementById('plan-inp-premium').value = plan.premium || '';
+      document.getElementById('plan-inp-frequency').value = plan.frequency || 'Monthly';
+      document.getElementById('plan-inp-paymentTerm').value = plan.paymentTerm || '';
+
+      const recBtn = document.getElementById('btn-toggle-recommended');
+      const lblRec = document.getElementById('lbl-recommended');
+      if (plan.recommended) {
+        recBtn.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-brand-600 text-white shadow-sm transition';
+        lblRec.textContent = 'Recommended ★';
+      } else {
+        recBtn.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-brand-50 text-brand-700 border border-brand-200 hover:bg-brand-100 transition';
+        lblRec.textContent = 'Mark Recommended';
+      }
+
+      if (!Array.isArray(plan.rowOrder)) {
+        plan.rowOrder = Object.keys(plan.rows || {}).filter(
+          k => k !== 'MONTHLY PREMIUM' && k !== 'Frequency' && k !== 'Payment Period'
+        );
+      }
+
+      const rowsContainer = document.getElementById('active-plan-rows-editor');
+      let rowsHtml = '';
+      const editableKeys = plan.rowOrder.filter(k => k !== 'MONTHLY PREMIUM' && k !== 'Frequency' && k !== 'Payment Period');
+      const totalRows = editableKeys.length;
+      
+      editableKeys.forEach((rowKey, rIdx) => {
+        const globalIdx = plan.rowOrder.indexOf(rowKey);
+        const rowVal = plan.rows[rowKey] !== undefined ? plan.rows[rowKey] : '';
+        const escapedKey = escapeHtml(rowKey).replace(/'/g, "\'");
+        const isFirst = rIdx === 0;
+        const isLast = rIdx === totalRows - 1;
+        
+        rowsHtml += `
+          <div
+            draggable="true"
+            data-row-index="${globalIdx}"
+            ondragstart="handleRowDragStart(event, ${globalIdx})"
+            ondragover="handleRowDragOver(event)"
+            ondragenter="handleRowDragEnter(event)"
+            ondragleave="handleRowDragLeave(event)"
+            ondrop="handleRowDrop(event, ${globalIdx})"
+            ondragend="handleRowDragEnd(event)"
+            class="benefit-row-item group flex items-center gap-1.5 bg-white p-2 rounded-xl border border-slate-200 hover:border-brand-300 transition select-none"
+          >
+            <div class="flex items-center gap-0.5 shrink-0">
+              <span title="Drag to reorder" class="cursor-grab active:cursor-grabbing text-slate-300 hover:text-brand-600 p-0.5">
+                <i data-lucide="grip-vertical" class="w-3.5 h-3.5"></i>
+              </span>
+              <div class="flex flex-col">
+                <button type="button" onclick="moveBenefitRow(${globalIdx}, -1)" ${isFirst ? 'disabled' : ''} class="p-0.5 rounded text-slate-400 hover:text-brand-600 disabled:opacity-25"><i data-lucide="chevron-up" class="w-3 h-3"></i></button>
+                <button type="button" onclick="moveBenefitRow(${globalIdx}, 1)" ${isLast ? 'disabled' : ''} class="p-0.5 rounded text-slate-400 hover:text-brand-600 disabled:opacity-25"><i data-lucide="chevron-down" class="w-3 h-3"></i></button>
+              </div>
+            </div>
+            <div class="w-[38%]">
+              <input type="text" value="${escapeHtml(rowKey)}" onchange="renameComparisonRow(${globalIdx}, this.value)" class="w-full rounded-lg border border-transparent hover:border-slate-300 focus:border-brand-500 bg-transparent px-1.5 py-1 text-[11px] font-bold text-slate-700 focus:outline-none" />
+            </div>
+            <div class="flex-1 flex items-center gap-1">
+              <input type="text" value="${escapeHtml(rowVal)}" oninput="updateActivePlanRowValue('${escapedKey}', this.value)" class="w-full rounded-lg border border-slate-300 bg-slate-50 px-2 py-1.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-brand-500" />
+              <button type="button" onclick="removeComparisonRow(${globalIdx})" class="p-1 text-slate-300 hover:text-brand-600 shrink-0"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+            </div>
+          </div>
+        `;
+      });
+
+      if (editableKeys.length === 0) {
+        rowsHtml = `
+          <div class="rounded-xl border border-dashed border-brand-200 bg-brand-50/30 p-3 text-center">
+            <p class="text-[11px] font-medium text-slate-600">No benefit rows added yet.</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">Click <span class="font-semibold text-brand-600">+ Add Benefit Row</span> above.</p>
+          </div>
+        `;
+      }
+      rowsContainer.innerHTML = rowsHtml;
+
+      // Toggle VUL vs Traditional Sub-Section Editor
+      const vulEditorEl = document.getElementById('mplan-vul-proj-editor');
+      const tradEditorEl = document.getElementById('mplan-trad-sched-editor');
+      vulEditorEl.classList.toggle('hidden', !isVul);
+      tradEditorEl.classList.toggle('hidden', isVul);
+
+      if (isVul) {
+        const vulBtn = document.getElementById('btn-mplan-vul-toggle');
+        const vulBody = document.getElementById('mplan-vul-proj-body');
+        if (plan.showVulProj) {
+          vulBtn.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-brand-600 text-white shadow-sm transition';
+          vulBtn.textContent = 'Table: ON';
+          vulBody.classList.remove('hidden');
+        } else {
+          vulBtn.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-slate-200 text-slate-600 transition';
+          vulBtn.textContent = 'Table: OFF';
+          vulBody.classList.add('hidden');
+        }
+
+        document.getElementById('mplan-rateLow').value = plan.rateLow || 'Low (4%)';
+        document.getElementById('mplan-rateMid').value = plan.rateMid || 'Medium (8%)';
+        document.getElementById('mplan-rateHigh').value = plan.rateHigh || 'High (10%)';
+
+        const pList = document.getElementById('mplan-vul-proj-list');
+        pList.innerHTML = (plan.projections || []).map((p, i) => `
+          <div class="grid grid-cols-12 gap-1.5 bg-white p-1.5 rounded-xl border border-slate-200 items-center">
+            <input type="text" value="${escapeHtml(p.year)}" oninput="appState.plans[appState.activePlanIndex].projections[${i}].year=this.value; renderPreviewSheet();" placeholder="Year 5" class="col-span-3 rounded-lg border border-slate-300 px-2 py-1 text-xs font-bold text-slate-800" />
+            <input type="text" value="${escapeHtml(p.low)}" oninput="appState.plans[appState.activePlanIndex].projections[${i}].low=this.value; renderPreviewSheet();" placeholder="Low" class="col-span-3 rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700" />
+            <input type="text" value="${escapeHtml(p.mid)}" oninput="appState.plans[appState.activePlanIndex].projections[${i}].mid=this.value; renderPreviewSheet();" placeholder="Medium" class="col-span-3 rounded-lg border border-brand-300 bg-brand-50/40 px-2 py-1 text-xs font-bold text-brand-800" />
+            <input type="text" value="${escapeHtml(p.high)}" oninput="appState.plans[appState.activePlanIndex].projections[${i}].high=this.value; renderPreviewSheet();" placeholder="High" class="col-span-2 rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700" />
+            <button type="button" onclick="removeActivePlanVulProjRow(${i})" class="col-span-1 text-slate-400 hover:text-brand-600 flex justify-center p-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+          </div>
+        `).join('');
+      } else {
+        const anyTradOn = plan.showCol1 || plan.showCol2 || plan.showCol3;
+        const masterBtn = document.getElementById('btn-mplan-trad-master');
+        if (anyTradOn) {
+          masterBtn.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-brand-600 text-white shadow-sm transition';
+          masterBtn.textContent = 'Section: ON';
+        } else {
+          masterBtn.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-slate-200 text-slate-600 transition';
+          masterBtn.textContent = 'Section: OFF';
+        }
+
+        [
+          { key: 'showCol1', btnId: 'btn-mplan-c1', badgeId: 'badge-mplan-c1', wrapId: 'wrap-mplan-col1' },
+          { key: 'showCol2', btnId: 'btn-mplan-c2', badgeId: 'badge-mplan-c2', wrapId: 'wrap-mplan-col2' },
+          { key: 'showCol3', btnId: 'btn-mplan-c3', badgeId: 'badge-mplan-c3', wrapId: 'wrap-mplan-col3' }
+        ].forEach(cfg => {
+          const isOn = !!plan[cfg.key];
+          const b = document.getElementById(cfg.btnId);
+          const bg = document.getElementById(cfg.badgeId);
+          const wr = document.getElementById(cfg.wrapId);
+          if (isOn) {
+            b.className = 'flex items-center justify-between px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition bg-white border-brand-400 text-slate-800 shadow-sm';
+            bg.className = 'px-1.5 py-0.5 rounded-full text-[9px] font-extrabold bg-brand-600 text-white';
+            bg.textContent = 'ON';
+            wr.classList.remove('hidden');
+          } else {
+            b.className = 'flex items-center justify-between px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition bg-slate-100 border-slate-200 text-slate-400';
+            bg.className = 'px-1.5 py-0.5 rounded-full text-[9px] font-extrabold bg-slate-200 text-slate-500';
+            bg.textContent = 'OFF';
+            wr.classList.add('hidden');
+          }
+        });
+
+        document.getElementById('mplan-trad-sched-body').classList.toggle('hidden', !anyTradOn);
+        document.getElementById('mplan-trad-off-notice').classList.toggle('hidden', anyTradOn);
+
+        document.getElementById('mplan-col1').value = plan.col1 || 'Cash Values';
+        document.getElementById('mplan-col2').value = plan.col2 || 'Endowment Payouts';
+        document.getElementById('mplan-col3').value = plan.col3 || 'Dividends';
+
+        const mList = document.getElementById('mplan-trad-milestones-list');
+        mList.innerHTML = (plan.milestones || []).map((m, i) => `
+          <div class="flex flex-wrap sm:flex-nowrap items-center gap-1.5 bg-white p-1.5 rounded-xl border border-slate-200">
+            <input type="text" value="${escapeHtml(m.year)}" oninput="appState.plans[appState.activePlanIndex].milestones[${i}].year=this.value; renderPreviewSheet();" placeholder="Year 5" class="w-24 shrink-0 rounded-lg border border-slate-300 px-2 py-1 text-xs font-bold text-slate-800" />
+            ${plan.showCol1 ? `<input type="text" value="${escapeHtml(m.c1)}" oninput="appState.plans[appState.activePlanIndex].milestones[${i}].c1=this.value; renderPreviewSheet();" placeholder="Cash Value" class="flex-1 min-w-0 rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700" />` : ''}
+            ${plan.showCol2 ? `<input type="text" value="${escapeHtml(m.c2)}" oninput="appState.plans[appState.activePlanIndex].milestones[${i}].c2=this.value; renderPreviewSheet();" placeholder="Payout" class="flex-1 min-w-0 rounded-lg border border-brand-300 bg-brand-50/40 px-2 py-1 text-xs font-bold text-brand-800" />` : ''}
+            ${plan.showCol3 ? `<input type="text" value="${escapeHtml(m.c3)}" oninput="appState.plans[appState.activePlanIndex].milestones[${i}].c3=this.value; renderPreviewSheet();" placeholder="Dividends" class="flex-1 min-w-0 rounded-lg border border-slate-300 px-2 py-1 text-xs text-slate-700" />` : ''}
+            <button type="button" onclick="removeActivePlanTradMilestone(${i})" class="text-slate-400 hover:text-brand-600 shrink-0 p-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderPreviewSheet() {
+      const mode = appState.studioMode;
+      const defaultTitles = {
+        'single-vul': 'Executive VUL Protection & Wealth Proposal',
+        'single-trad': 'Guaranteed Traditional Plan Proposal Summary',
+        'multi': 'Comprehensive Insurance & Wealth Plan Comparison'
+      };
+
+      document.getElementById('out-docTitle').textContent = appState.docTitle || defaultTitles[mode];
+      document.getElementById('out-clientName').textContent = appState.clientName || 'Client Name';
+      document.getElementById('out-clientProfile').textContent = appState.clientProfile || '—';
+      document.getElementById('out-proposalDate').textContent = formatDisplayDate(appState.proposalDate);
+      document.getElementById('out-advisorNote').textContent = appState.advisorNote || 'This proposal is tailored to provide reliable financial security and long-term peace of mind aligned with your goals.';
+      document.getElementById('out-advisorName').textContent = appState.advisorName || 'Mark Isaac Ison';
+      document.getElementById('out-advisorTitle').textContent = appState.advisorTitle || 'Financial Services Consultant • Pru Life UK';
+      document.getElementById('out-advisorPhone').textContent = appState.advisorPhone || '09760060604';
+      document.getElementById('out-advisorEmail').textContent = appState.advisorEmail || 'plukmarkison@gmail.com';
+      const avatarWrap = document.getElementById('out-advisorAvatarWrap');
+      const avatarImg = document.getElementById('out-advisorAvatar');
+      if (avatarWrap && avatarImg) {
+        if (appState.showAdvisorPhoto && appState.advisorPhoto) {
+          avatarWrap.classList.remove('hidden');
+          avatarImg.src = appState.advisorPhoto;
+        } else {
+          avatarWrap.classList.add('hidden');
+        }
+      }
+
+      document.getElementById('out-single-vul-body').classList.toggle('hidden', mode !== 'single-vul');
+      document.getElementById('out-single-trad-body').classList.toggle('hidden', mode !== 'single-trad');
+      document.getElementById('out-multi-body').classList.toggle('hidden', mode !== 'multi');
+
+      const topBar = document.getElementById('sheet-top-bar');
+      const headerBadge = document.getElementById('out-header-badge');
+      const toolbarLabel = document.getElementById('toolbar-mode-label');
+
+      topBar.className = 'h-2 w-full bg-gradient-to-r from-brand-800 via-brand-600 to-brand-500';
+      headerBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-brand-600 text-white text-[9px] font-bold uppercase tracking-wider';
+
+      if (mode === 'single-vul') {
+        headerBadge.textContent = 'Single Plan Spotlight • VUL';
+        toolbarLabel.textContent = 'Live A4 Preview (Single VUL Plan)';
+        renderSingleVulPreview();
+      } else if (mode === 'single-trad') {
+        headerBadge.textContent = 'Single Plan Spotlight • Traditional';
+        toolbarLabel.textContent = 'Live A4 Preview (Single Traditional Plan)';
+        renderSingleTradPreview();
+      } else {
+        headerBadge.textContent = 'Side-by-Side Benefit Comparison';
+        toolbarLabel.textContent = `Live A4 Preview (${appState.plans.length} Plans)`;
+        renderMultiComparisonPreview();
+      }
+
+      applyOrientationClass();
+      applyPreviewScaling();
+    }
+
+    function renderSingleVulPreview() {
+      const sv = appState.singleVul;
+      document.getElementById('out-svul-name').textContent = sv.name || 'VUL Protection & Wealth Plan';
+      document.getElementById('out-svul-fund').textContent = sv.fund ? `Fund Strategy: ${sv.fund}` : 'Fund Strategy: Custom Allocation';
+      document.getElementById('out-svul-premium').textContent = sv.premium || '—';
+      document.getElementById('out-svul-freq-term').textContent = sv.payTerm ? `${sv.frequency || 'Monthly'} • ${sv.payTerm}` : (sv.frequency || 'Monthly');
+      document.getElementById('out-svul-coverage').textContent = sv.coverageAge || '—';
+
+      const benSection = document.getElementById('out-svul-benefits-section');
+      const grid = document.getElementById('out-svul-benefits-grid');
+      const projHeading = document.getElementById('out-svul-proj-heading');
+
+      if (sv.benefits.length === 0) {
+        benSection.classList.add('hidden');
+        projHeading.textContent = '1. Illustrated Fund Value Projections';
+      } else {
+        benSection.classList.remove('hidden');
+        projHeading.textContent = '2. Illustrated Fund Value Projections';
+        grid.innerHTML = sv.benefits.map(b => `
+          <div class="rounded-xl border border-brand-200 bg-brand-50/30 p-3 flex flex-col justify-between">
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-brand-700 block">${escapeHtml(b.label || 'Benefit')}</span>
+              <span class="text-sm font-extrabold text-slate-900 mt-0.5 block">${escapeHtml(b.value || '—')}</span>
+            </div>
+            ${b.note ? `<p class="text-[10.5px] text-slate-600 mt-1 leading-snug">${escapeHtml(b.note)}</p>` : ''}
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('out-svul-th-low').textContent = sv.rateLow || 'Low (4%)';
+      document.getElementById('out-svul-th-mid').textContent = sv.rateMid || 'Medium (8%)';
+      document.getElementById('out-svul-th-high').textContent = sv.rateHigh || 'High (10%)';
+
+      const tbody = document.getElementById('out-svul-proj-tbody');
+      tbody.innerHTML = sv.projections.map((p, idx) => `
+        <tr class="${idx % 2 === 0 ? 'bg-white' : 'bg-brand-50/25'}">
+          <td class="py-2 px-3 font-bold text-slate-800 border-r border-brand-100">${escapeHtml(p.year || '-')}</td>
+          <td class="py-2 px-3 text-center text-slate-700 border-r border-brand-100">${escapeHtml(p.low || '-')}</td>
+          <td class="py-2 px-3 text-center font-extrabold text-brand-700 bg-brand-50/70 border-r border-brand-100">${escapeHtml(p.mid || '-')}</td>
+          <td class="py-2 px-3 text-center font-semibold text-slate-800">${escapeHtml(p.high || '-')}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderSingleTradPreview() {
+      const st = appState.singleTrad;
+      document.getElementById('out-strad-name').textContent = st.name || 'Traditional Guaranteed Plan';
+      document.getElementById('out-strad-category').textContent = st.category ? `Category: ${st.category}` : 'Category: Traditional Plan';
+      document.getElementById('out-strad-premium').textContent = st.premium || '—';
+      document.getElementById('out-strad-freq-term').textContent = st.payTerm ? `${st.frequency || 'Monthly'} • ${st.payTerm}` : (st.frequency || 'Monthly');
+      document.getElementById('out-strad-maturity').textContent = st.maturity || '—';
+
+      const benSection = document.getElementById('out-strad-benefits-section');
+      const grid = document.getElementById('out-strad-benefits-grid');
+      const hasBenefits = st.benefits.length > 0;
+
+      if (!hasBenefits) {
+        benSection.classList.add('hidden');
+      } else {
+        benSection.classList.remove('hidden');
+        grid.innerHTML = st.benefits.map(b => `
+          <div class="rounded-xl border border-brand-200 bg-brand-50/30 p-3 flex flex-col justify-between">
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-brand-700 block">${escapeHtml(b.label || 'Benefit')}</span>
+              <span class="text-sm font-extrabold text-slate-900 mt-0.5 block">${escapeHtml(b.value || '—')}</span>
+            </div>
+            ${b.note ? `<p class="text-[10.5px] text-slate-600 mt-1 leading-snug">${escapeHtml(b.note)}</p>` : ''}
+          </div>
+        `).join('');
+      }
+
+      const scheduleSection = document.getElementById('out-strad-schedule-section');
+      const anyColOn = st.showCol1 || st.showCol2 || st.showCol3;
+
+      if (!anyColOn) {
+        scheduleSection.classList.add('hidden');
+      } else {
+        scheduleSection.classList.remove('hidden');
+
+        const activeNames = [];
+        if (st.showCol1) activeNames.push(st.col1 || 'Cash Values');
+        if (st.showCol2) activeNames.push(st.col2 || 'Endowment Payouts');
+        if (st.showCol3) activeNames.push(st.col3 || 'Dividends');
+        const stepNum = hasBenefits ? '2. ' : '1. ';
+        document.getElementById('out-strad-schedule-heading').textContent = stepNum + activeNames.join(', ');
+
+        const thead = document.getElementById('out-strad-milestones-thead');
+        let thHtml = `<tr class="bg-brand-800 text-white text-[10px] font-extrabold uppercase tracking-wider">`;
+        thHtml += `<th class="py-2 px-3 text-left border-r border-brand-700">Policy Year</th>`;
+        if (st.showCol1) {
+          thHtml += `<th class="py-2 px-3 text-center border-r border-brand-700 last:border-r-0">${escapeHtml(st.col1 || 'Cash Values')}</th>`;
+        }
+        if (st.showCol2) {
+          thHtml += `<th class="py-2 px-3 text-center border-r border-brand-700 last:border-r-0 bg-brand-600">${escapeHtml(st.col2 || 'Endowment Payouts')}</th>`;
+        }
+        if (st.showCol3) {
+          thHtml += `<th class="py-2 px-3 text-center last:border-r-0">${escapeHtml(st.col3 || 'Dividends')}</th>`;
+        }
+        thHtml += `</tr>`;
+        thead.innerHTML = thHtml;
+
+        const tbody = document.getElementById('out-strad-milestones-tbody');
+        tbody.innerHTML = st.milestones.map((m, idx) => {
+          let rowHtml = `<tr class="${idx % 2 === 0 ? 'bg-white' : 'bg-brand-50/25'}">`;
+          rowHtml += `<td class="py-2 px-3 font-bold text-slate-800 border-r border-brand-100">${escapeHtml(m.year || '-')}</td>`;
+          if (st.showCol1) {
+            rowHtml += `<td class="py-2 px-3 text-center text-slate-700 border-r border-brand-100 last:border-r-0">${escapeHtml(m.c1 || '-')}</td>`;
+          }
+          if (st.showCol2) {
+            rowHtml += `<td class="py-2 px-3 text-center font-extrabold text-brand-700 bg-brand-50/70 border-r border-brand-100 last:border-r-0">${escapeHtml(m.c2 || '-')}</td>`;
+          }
+          if (st.showCol3) {
+            rowHtml += `<td class="py-2 px-3 text-center font-semibold text-slate-800 last:border-r-0">${escapeHtml(m.c3 || '-')}</td>`;
+          }
+          rowHtml += `</tr>`;
+          return rowHtml;
+        }).join('');
+      }
+    }
+
+    function renderMultiComparisonPreview() {
+      const numPlans = appState.plans.length;
+      let fontSizeClass = 'text-[11px] sm:text-xs';
+      let paddingClass = 'py-2 px-2';
+      if (numPlans >= 6) {
+        fontSizeClass = 'text-[9px] sm:text-[10px]';
+        paddingClass = 'py-1.5 px-1.5';
+      } else if (numPlans >= 4) {
+        fontSizeClass = 'text-[10px] sm:text-[11px]';
+        paddingClass = 'py-1.5 px-2';
+      }
+
+      const thead = document.getElementById('out-comparison-thead');
+      let colWidthPercent = (76 / numPlans).toFixed(2);
+      let headHtml = `
+        <tr class="bg-brand-800 text-white text-[10px] font-extrabold uppercase tracking-wider">
+          <th class="py-2 px-2.5 text-left w-[24%] border-r border-brand-700">Benefit / Metric</th>
+      `;
+      appState.plans.forEach((plan, idx) => {
+        const optLbl = OPTION_SHORT_LABELS[idx] || `Opt ${idx+1}`;
+        const recClass = plan.recommended ? 'bg-white text-brand-700' : 'bg-brand-900/60 text-white border border-white/25';
+        const star = plan.recommended ? ' ★' : '';
+        const typeLabel = plan.type === 'Traditional' ? 'TRADITIONAL' : 'VUL';
+        const typePill = plan.type === 'Traditional'
+          ? 'bg-brand-950/60 text-brand-100 border border-brand-300/40'
+          : 'bg-white/15 text-white border border-white/30';
+
+        headHtml += `
+          <th style="width: ${colWidthPercent}%;" class="${paddingClass} text-center border-r border-brand-700 last:border-r-0 relative ${plan.recommended ? 'bg-brand-700' : ''}">
+            <div class="flex flex-col items-center justify-center gap-0.5">
+              <div class="flex items-center gap-1">
+                <span class="px-1.5 py-0.5 rounded text-[8px] font-extrabold ${recClass}">${optLbl}${star}</span>
+                <span class="px-1.5 py-0.5 rounded text-[7.5px] font-extrabold ${typePill}">${typeLabel}</span>
+              </div>
+              <span class="text-[11px] font-bold leading-tight break-words whitespace-normal max-w-full text-white">${escapeHtml(plan.name || 'Plan')}</span>
+              ${plan.provider ? `<span class="text-[8.5px] font-normal text-brand-100 truncate max-w-full">${escapeHtml(plan.provider)}</span>` : ''}
+            </div>
+          </th>
+        `;
+      });
+      headHtml += `</tr>`;
+      thead.innerHTML = headHtml;
+
+      const allRowKeys = ['MONTHLY PREMIUM', 'Frequency', 'Payment Period'];
+      appState.plans.forEach(plan => {
+        const orderedKeys = Array.isArray(plan.rowOrder) ? plan.rowOrder : Object.keys(plan.rows || {});
+        orderedKeys.forEach(k => { if (!allRowKeys.includes(k)) allRowKeys.push(k); });
+        Object.keys(plan.rows || {}).forEach(k => { if (!allRowKeys.includes(k)) allRowKeys.push(k); });
+      });
+
+      const tbody = document.getElementById('out-comparison-tbody');
+      let bodyHtml = '';
+      allRowKeys.forEach((rowKey, rIdx) => {
+        const rowBg = rIdx % 2 === 0 ? 'bg-white' : 'bg-brand-50/25';
+        const isHighlightedRow = rowKey === 'MONTHLY PREMIUM';
+        const rowTitleStyle = isHighlightedRow ? 'font-extrabold text-brand-900 uppercase tracking-wide' : 'font-semibold text-slate-700';
+        bodyHtml += `<tr class="${rowBg}"><td class="${paddingClass} ${rowTitleStyle} border-r border-brand-100 ${fontSizeClass}">${escapeHtml(rowKey)}</td>`;
+        appState.plans.forEach(plan => {
+          let val = plan.rows[rowKey] !== undefined ? plan.rows[rowKey] : '-';
+          if (rowKey === 'MONTHLY PREMIUM') val = plan.premium || val;
+          if (rowKey === 'Frequency') val = plan.frequency || val;
+          if (rowKey === 'Payment Period') val = plan.paymentTerm || val;
+          const cellBg = plan.recommended ? 'bg-brand-50/60' : '';
+          const textStyle = rowKey === 'MONTHLY PREMIUM' ? 'font-extrabold text-brand-700' : 'text-slate-800';
+          bodyHtml += `<td style="width: ${colWidthPercent}%;" class="${paddingClass} text-center border-r border-brand-100 last:border-r-0 ${cellBg} ${textStyle} ${fontSizeClass} break-words whitespace-normal">${escapeHtml(val)}</td>`;
+        });
+        bodyHtml += `</tr>`;
+      });
+      tbody.innerHTML = bodyHtml;
+
+      // Render Per-Option Sub-Tables (VUL Fund Value Projection & Traditional Cash Value/Payout/Dividends)
+      const subContainer = document.getElementById('out-multi-subtables-container');
+      let subHtml = '';
+
+      appState.plans.forEach((plan, idx) => {
+        const optLbl = OPTION_LABELS[idx] || `Option ${idx + 1}`;
+        const planTitle = plan.name ? `${optLbl}: ${plan.name}` : optLbl;
+        const isVul = plan.type !== 'Traditional';
+
+        if (isVul && plan.showVulProj !== false) {
+          const rows = plan.projections || [];
+          subHtml += `
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <h3 class="text-[11px] font-extrabold uppercase tracking-wider text-brand-800 flex items-center gap-1.5">
+                  <span class="px-1.5 py-0.5 rounded bg-brand-600 text-white text-[9px]">VUL</span>
+                  <span>${escapeHtml(planTitle)} &mdash; Illustrated Fund Value Projections</span>
+                </h3>
+                <span class="text-[9.5px] font-semibold text-brand-600">Non-Guaranteed Living Fund</span>
+              </div>
+              <div class="rounded-xl border border-brand-200 overflow-hidden shadow-sm">
+                <table class="w-full border-collapse text-xs">
+                  <thead>
+                    <tr class="bg-brand-800 text-white text-[9.5px] font-extrabold uppercase tracking-wider">
+                      <th class="py-1.5 px-3 text-left border-r border-brand-700">Policy Year</th>
+                      <th class="py-1.5 px-3 text-center border-r border-brand-700">${escapeHtml(plan.rateLow || 'Low (4%)')}</th>
+                      <th class="py-1.5 px-3 text-center border-r border-brand-700 bg-brand-600">${escapeHtml(plan.rateMid || 'Medium (8%)')}</th>
+                      <th class="py-1.5 px-3 text-center">${escapeHtml(plan.rateHigh || 'High (10%)')}</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-brand-100">
+                    ${rows.map((p, rIdx) => `
+                      <tr class="${rIdx % 2 === 0 ? 'bg-white' : 'bg-brand-50/25'}">
+                        <td class="py-1.5 px-3 font-bold text-slate-800 border-r border-brand-100">${escapeHtml(p.year || '-')}</td>
+                        <td class="py-1.5 px-3 text-center text-slate-700 border-r border-brand-100">${escapeHtml(p.low || '-')}</td>
+                        <td class="py-1.5 px-3 text-center font-extrabold text-brand-700 bg-brand-50/70 border-r border-brand-100">${escapeHtml(p.mid || '-')}</td>
+                        <td class="py-1.5 px-3 text-center font-semibold text-slate-800">${escapeHtml(p.high || '-')}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        } else if (!isVul && (plan.showCol1 || plan.showCol2 || plan.showCol3)) {
+          const activeCols = [];
+          if (plan.showCol1) activeCols.push(plan.col1 || 'Cash Values');
+          if (plan.showCol2) activeCols.push(plan.col2 || 'Endowment Payouts');
+          if (plan.showCol3) activeCols.push(plan.col3 || 'Dividends');
+          const rows = plan.milestones || [];
+
+          subHtml += `
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <h3 class="text-[11px] font-extrabold uppercase tracking-wider text-brand-800 flex items-center gap-1.5">
+                  <span class="px-1.5 py-0.5 rounded bg-brand-800 text-white text-[9px]">TRADITIONAL</span>
+                  <span>${escapeHtml(planTitle)} &mdash; ${escapeHtml(activeCols.join(', '))}</span>
+                </h3>
+                <span class="text-[9.5px] font-semibold text-brand-600">Policy Milestone Schedule</span>
+              </div>
+              <div class="rounded-xl border border-brand-200 overflow-hidden shadow-sm">
+                <table class="w-full border-collapse text-xs">
+                  <thead>
+                    <tr class="bg-brand-800 text-white text-[9.5px] font-extrabold uppercase tracking-wider">
+                      <th class="py-1.5 px-3 text-left border-r border-brand-700">Policy Year</th>
+                      ${plan.showCol1 ? `<th class="py-1.5 px-3 text-center border-r border-brand-700 last:border-r-0">${escapeHtml(plan.col1 || 'Cash Values')}</th>` : ''}
+                      ${plan.showCol2 ? `<th class="py-1.5 px-3 text-center border-r border-brand-700 last:border-r-0 bg-brand-600">${escapeHtml(plan.col2 || 'Endowment Payouts')}</th>` : ''}
+                      ${plan.showCol3 ? `<th class="py-1.5 px-3 text-center last:border-r-0">${escapeHtml(plan.col3 || 'Dividends')}</th>` : ''}
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-brand-100">
+                    ${rows.map((m, rIdx) => `
+                      <tr class="${rIdx % 2 === 0 ? 'bg-white' : 'bg-brand-50/25'}">
+                        <td class="py-1.5 px-3 font-bold text-slate-800 border-r border-brand-100">${escapeHtml(m.year || '-')}</td>
+                        ${plan.showCol1 ? `<td class="py-1.5 px-3 text-center text-slate-700 border-r border-brand-100 last:border-r-0">${escapeHtml(m.c1 || '-')}</td>` : ''}
+                        ${plan.showCol2 ? `<td class="py-1.5 px-3 text-center font-extrabold text-brand-700 bg-brand-50/70 border-r border-brand-100 last:border-r-0">${escapeHtml(m.c2 || '-')}</td>` : ''}
+                        ${plan.showCol3 ? `<td class="py-1.5 px-3 text-center font-semibold text-slate-800 last:border-r-0">${escapeHtml(m.c3 || '-')}</td>` : ''}
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      subContainer.innerHTML = subHtml;
+    }
+
+    // =========================================================================
+    // 5. MULTI-PLAN MANAGEMENT ACTIONS
+    // =========================================================================
+    function setActivePlanIndex(idx) {
+      appState.activePlanIndex = idx;
+      renderAll();
+    }
+
+    function addNewPlanOption() {
+      if (appState.plans.length >= MAX_PLANS) {
+        showToast('Maximum limit of 10 proposals reached.', 'error');
+        return;
+      }
+      const newIdx = appState.plans.length;
+      appState.plans.push(createDefaultMultiPlan(newIdx));
+      appState.activePlanIndex = appState.plans.length - 1;
+      renderAll();
+      showToast(`Added ${OPTION_LABELS[newIdx]} successfully.`, 'success');
+    }
+
+    function cloneActivePlanOption() {
+      if (appState.plans.length >= MAX_PLANS) {
+        showToast('Maximum limit of 10 proposals reached.', 'error');
+        return;
+      }
+      const currentPlan = appState.plans[appState.activePlanIndex];
+      appState.plans.push({
+        name: `${currentPlan.name} (Copy)`,
+        type: currentPlan.type,
+        provider: currentPlan.provider,
+        currency: currentPlan.currency || 'PHP',
+        premium: currentPlan.premium,
+        frequency: currentPlan.frequency || 'Monthly',
+        paymentTerm: currentPlan.paymentTerm,
+        recommended: false,
+        isVul: currentPlan.isVul,
+        rowOrder: [...(currentPlan.rowOrder || [])],
+        rows: { ...currentPlan.rows },
+        showVulProj: currentPlan.showVulProj !== false,
+        rateLow: currentPlan.rateLow || 'Low (4%)',
+        rateMid: currentPlan.rateMid || 'Medium (8%)',
+        rateHigh: currentPlan.rateHigh || 'High (10%)',
+        projections: (currentPlan.projections || []).map(p => ({ ...p })),
+        showCol1: currentPlan.showCol1 !== false,
+        showCol2: currentPlan.showCol2 !== false,
+        showCol3: currentPlan.showCol3 !== false,
+        col1: currentPlan.col1 || 'Cash Values',
+        col2: currentPlan.col2 || 'Endowment Payouts',
+        col3: currentPlan.col3 || 'Dividends',
+        milestones: (currentPlan.milestones || []).map(m => ({ ...m }))
+      });
+      appState.activePlanIndex = appState.plans.length - 1;
+      renderAll();
+      showToast('Cloned plan option.', 'success');
+    }
+
+    function removeActivePlan() {
+      if (appState.plans.length <= 1) {
+        showToast('You must keep at least 1 proposal option.', 'error');
+        return;
+      }
+      appState.plans.splice(appState.activePlanIndex, 1);
+      if (appState.activePlanIndex >= appState.plans.length) {
+        appState.activePlanIndex = appState.plans.length - 1;
+      }
+      renderAll();
+    }
+
+    function moveActivePlan(direction) {
+      const curr = appState.activePlanIndex;
+      const target = curr + direction;
+      if (target < 0 || target >= appState.plans.length) return;
+      [appState.plans[curr], appState.plans[target]] = [appState.plans[target], appState.plans[curr]];
+      appState.activePlanIndex = target;
+      renderAll();
+    }
+
+    function toggleRecommendedPlan() {
+      const plan = appState.plans[appState.activePlanIndex];
+      plan.recommended = !plan.recommended;
+      renderAll();
+    }
+
+    function updateActivePlanField(field, val) {
+      const plan = appState.plans[appState.activePlanIndex];
+      plan[field] = val;
+      if (field === 'premium') plan.rows['MONTHLY PREMIUM'] = val;
+      if (field === 'frequency') plan.rows['Frequency'] = val;
+      if (field === 'paymentTerm') plan.rows['Payment Period'] = val;
+      renderPlanTabs();
+      renderPreviewSheet();
+    }
+
+    function updateActivePlanCurrency(currency) {
+      const plan = appState.plans[appState.activePlanIndex];
+      plan.currency = currency;
+      if (plan.premium) {
+        const formatted = formatPremiumWithCurrency(plan.premium, currency);
+        plan.premium = formatted;
+        plan.rows['MONTHLY PREMIUM'] = formatted;
+        document.getElementById('plan-inp-premium').value = formatted;
+      }
+      renderPreviewSheet();
+    }
+
+    function updateActivePlanPremium(val) {
+      const plan = appState.plans[appState.activePlanIndex];
+      const inputEl = document.getElementById('plan-inp-premium');
+      const formatted = formatPremiumWithCurrency(val, plan.currency || 'PHP');
+      plan.premium = formatted;
+      plan.rows['MONTHLY PREMIUM'] = formatted;
+      if (inputEl && inputEl.value !== formatted) inputEl.value = formatted;
+      renderPreviewSheet();
+    }
+
+    function updateActivePlanType(val) {
+      const plan = appState.plans[appState.activePlanIndex];
+      plan.type = val;
+      plan.isVul = (val === 'Variable Unit Linked');
+      renderAll();
+    }
+
+    function toggleActivePlanVulProj() {
+      const plan = appState.plans[appState.activePlanIndex];
+      plan.showVulProj = !plan.showVulProj;
+      renderAll();
+    }
+
+    function updateActivePlanVulMeta(field, val) {
+      const plan = appState.plans[appState.activePlanIndex];
+      plan[field] = val;
+      renderPreviewSheet();
+    }
+
+    function addActivePlanVulProjRow() {
+      const plan = appState.plans[appState.activePlanIndex];
+      if (!Array.isArray(plan.projections)) plan.projections = [];
+      plan.projections.push({ year: '', low: '', mid: '', high: '' });
+      renderAll();
+    }
+
+    function removeActivePlanVulProjRow(idx) {
+      const plan = appState.plans[appState.activePlanIndex];
+      if (!plan.projections || plan.projections.length <= 1) return;
+      plan.projections.splice(idx, 1);
+      renderAll();
+    }
+
+    function toggleActivePlanTradMaster() {
+      const plan = appState.plans[appState.activePlanIndex];
+      const anyOn = plan.showCol1 || plan.showCol2 || plan.showCol3;
+      const next = !anyOn;
+      plan.showCol1 = next;
+      plan.showCol2 = next;
+      plan.showCol3 = next;
+      renderAll();
+    }
+
+    function toggleActivePlanTradCol(colKey) {
+      const plan = appState.plans[appState.activePlanIndex];
+      plan[colKey] = !plan[colKey];
+      renderAll();
+    }
+
+    function updateActivePlanTradMeta(field, val) {
+      const plan = appState.plans[appState.activePlanIndex];
+      plan[field] = val;
+      renderPreviewSheet();
+    }
+
+    function addActivePlanTradMilestone() {
+      const plan = appState.plans[appState.activePlanIndex];
+      if (!Array.isArray(plan.milestones)) plan.milestones = [];
+      plan.milestones.push({ year: '', c1: '', c2: '', c3: '' });
+      renderAll();
+    }
+
+    function removeActivePlanTradMilestone(idx) {
+      const plan = appState.plans[appState.activePlanIndex];
+      if (!plan.milestones || plan.milestones.length <= 1) return;
+      plan.milestones.splice(idx, 1);
+      renderAll();
+    }
+
+    function updateActivePlanRowValue(rowKey, val) {
+      const plan = appState.plans[appState.activePlanIndex];
+      plan.rows[rowKey] = val;
+      renderPreviewSheet();
+    }
+
+    function addCustomComparisonRow() {
+      const plan = appState.plans[appState.activePlanIndex];
+      if (!plan) return;
+      if (!Array.isArray(plan.rowOrder)) plan.rowOrder = [];
+      const rowName = prompt('Enter new benefit row name (e.g., "Life / Death Benefit"):');
+      if (!rowName || !rowName.trim()) return;
+      const cleanKey = rowName.trim();
+      if (['MONTHLY PREMIUM', 'Frequency', 'Payment Period'].includes(cleanKey) || plan.rowOrder.includes(cleanKey)) {
+        showToast(`"${cleanKey}" already exists.`, 'error');
+        return;
+      }
+      plan.rowOrder.push(cleanKey);
+      plan.rows[cleanKey] = '';
+      renderAll();
+    }
+
+    function renameComparisonRow(rowIndex, newLabel) {
+      const plan = appState.plans[appState.activePlanIndex];
+      if (!plan || !Array.isArray(plan.rowOrder)) return;
+      const oldKey = plan.rowOrder[rowIndex];
+      const cleanKey = (newLabel || '').trim();
+      if (!oldKey || !cleanKey || cleanKey === oldKey) { renderActivePlanEditor(); return; }
+      plan.rowOrder[rowIndex] = cleanKey;
+      plan.rows[cleanKey] = plan.rows[oldKey] || '';
+      delete plan.rows[oldKey];
+      renderAll();
+    }
+
+    function removeComparisonRow(rowIndex) {
+      const plan = appState.plans[appState.activePlanIndex];
+      if (!plan || !Array.isArray(plan.rowOrder)) return;
+      const rowKey = plan.rowOrder[rowIndex];
+      plan.rowOrder.splice(rowIndex, 1);
+      delete plan.rows[rowKey];
+      renderAll();
+    }
+
+    function moveBenefitRow(index, direction) {
+      const plan = appState.plans[appState.activePlanIndex];
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= plan.rowOrder.length) return;
+      const moved = plan.rowOrder.splice(index, 1)[0];
+      plan.rowOrder.splice(targetIndex, 0, moved);
+      renderAll();
+    }
+
+    function handleRowDragStart(e, index) {
+      draggedRowIndex = index;
+      e.dataTransfer.effectAllowed = 'move';
+    }
+    function handleRowDragOver(e) { e.preventDefault(); }
+    function handleRowDragEnter(e) { e.preventDefault(); }
+    function handleRowDragLeave(e) {}
+    function handleRowDrop(e, targetIndex) {
+      e.preventDefault();
+      if (draggedRowIndex === null || draggedRowIndex === targetIndex) return;
+      const plan = appState.plans[appState.activePlanIndex];
+      const moved = plan.rowOrder.splice(draggedRowIndex, 1)[0];
+      plan.rowOrder.splice(targetIndex, 0, moved);
+      draggedRowIndex = null;
+      renderAll();
+    }
+    function handleRowDragEnd() { draggedRowIndex = null; }
+
+    // =========================================================================
+    // 6. ORIENTATION, ZOOM SCALING & EXPORT (PNG / PDF)
+    // =========================================================================
+    function setPreviewZoom(mode) {
+      appState.zoomMode = mode;
+      ['fit', 0.75, 1, 1.2].forEach(m => {
+        const id = m === 'fit' ? 'btn-zoom-fit' : `btn-zoom-${Math.round(m * 100)}`;
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.className = m === mode
+          ? 'px-2 py-1 rounded-md text-[11px] font-bold bg-brand-600 text-white shadow-sm transition'
+          : 'px-2 py-1 rounded-md text-[11px] font-bold text-slate-600 hover:text-brand-700 transition';
+      });
+      applyPreviewScaling();
+    }
+
+    function applyPreviewScaling() {
+      const wrapper = document.getElementById('preview-wrapper');
+      const stage = document.getElementById('sheet-scale-stage');
+      const sheet = document.getElementById('one-pager-sheet');
+      const indicator = document.getElementById('zoom-indicator');
+      if (!wrapper || !stage || !sheet || wrapper.offsetParent === null) return;
+
+      const isLandscape = appState.orientation === 'landscape';
+      const baseWidth = isLandscape ? 1123 : 816;
+      let scale = appState.zoomMode === 'fit'
+        ? Math.min(1, Math.max(0.32, (wrapper.clientWidth - 32) / baseWidth))
+        : (Number(appState.zoomMode) || 1);
+
+      sheet.style.transform = 'none';
+      const unscaledHeight = sheet.scrollHeight;
+      sheet.style.transform = `scale(${scale})`;
+      stage.style.height = `${Math.ceil(unscaledHeight * scale) + 32}px`;
+      if (indicator) indicator.textContent = `${Math.round(scale * 100)}%`;
+    }
+
+    function setOrientation(orient, userTriggered = false) {
+      appState.orientation = orient;
+      applyOrientationClass();
+      applyPreviewScaling();
+      if (userTriggered) {
+        showToast(`Switched to ${orient === 'landscape' ? 'Landscape A4' : 'Portrait A4'}.`, 'info');
+      }
+    }
+
+    function applyOrientationClass() {
+      const sheet = document.getElementById('one-pager-sheet');
+      const btnPort = document.getElementById('btn-orient-portrait');
+      const btnLand = document.getElementById('btn-orient-landscape');
+      const dynamicStyle = document.getElementById('dynamic-print-style');
+
+      if (appState.orientation === 'landscape') {
+        sheet.classList.add('landscape');
+        btnLand.className = 'px-2.5 py-1 rounded-md text-[11px] font-bold bg-brand-600 text-white shadow-sm';
+        btnPort.className = 'px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-600 hover:text-brand-700';
+        dynamicStyle.innerHTML = '@media print { @page { size: A4 landscape; margin: 0; } }';
+      } else {
+        sheet.classList.remove('landscape');
+        btnPort.className = 'px-2.5 py-1 rounded-md text-[11px] font-bold bg-brand-600 text-white shadow-sm';
+        btnLand.className = 'px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-600 hover:text-brand-700';
+        dynamicStyle.innerHTML = '@media print { @page { size: A4 portrait; margin: 0; } }';
+      }
+    }
+
+    async function downloadAsPNG() {
+      const prevTabHidden = document.getElementById('preview-wrapper').classList.contains('hidden');
+      if (prevTabHidden) switchWorkspaceTab('preview');
+      showToast('Generating PNG image...', 'info');
+      const sheet = document.getElementById('one-pager-sheet');
+      const origTransform = sheet.style.transform;
+      sheet.style.transform = 'none';
+      try {
+        const canvas = await html2canvas(sheet, { scale: 2, useCORS: true, logging: false });
+        sheet.style.transform = origTransform;
+        const suffix = appState.studioMode === 'single-vul' ? '_VUL_Proposal' : (appState.studioMode === 'single-trad' ? '_Traditional_Proposal' : '_Benefit_Comparison');
+        const link = document.createElement('a');
+        link.download = (appState.clientName ? appState.clientName.replace(/\s+/g, '_') : 'Client') + suffix + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showToast('PNG downloaded successfully!', 'success');
+      } catch (err) {
+        sheet.style.transform = origTransform;
+        showToast('Failed to generate PNG.', 'error');
+      }
+    }
+
+    async function downloadAsPDF() {
+      const prevTabHidden = document.getElementById('preview-wrapper').classList.contains('hidden');
+      if (prevTabHidden) switchWorkspaceTab('preview');
+      showToast('Preparing A4 PDF...', 'info');
+      const sheet = document.getElementById('one-pager-sheet');
+      const origTransform = sheet.style.transform;
+      sheet.style.transform = 'none';
+      try {
+        const canvas = await html2canvas(sheet, { scale: 2, useCORS: true, logging: false });
+        sheet.style.transform = origTransform;
+        const { jsPDF } = window.jspdf;
+        const isLand = appState.orientation === 'landscape';
+        const pdf = new jsPDF(isLand ? 'l' : 'p', 'mm', 'a4');
+        const imgData = canvas.toDataURL('image/png');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight;
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+          heightLeft -= pdfHeight;
+        }
+        const suffix = appState.studioMode === 'single-vul' ? '_VUL_Proposal' : (appState.studioMode === 'single-trad' ? '_Traditional_Proposal' : '_Benefit_Comparison');
+        pdf.save((appState.clientName ? appState.clientName.replace(/\s+/g, '_') : 'Client') + suffix + '.pdf');
+        showToast('PDF downloaded successfully!', 'success');
+      } catch (err) {
+        sheet.style.transform = origTransform;
+        showToast('Failed to generate PDF.', 'error');
+      }
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      let bg = 'bg-brand-800 text-white';
+      if (type === 'success') bg = 'bg-brand-600 text-white';
+      if (type === 'error') bg = 'bg-brand-900 text-white';
+      if (type === 'info') bg = 'bg-brand-700 text-white';
+      toast.className = `pointer-events-auto px-4 py-2.5 rounded-xl text-xs font-semibold shadow-lg transition-all duration-300 translate-y-2 opacity-0 flex items-center gap-2 ${bg}`;
+      toast.innerHTML = `<span>${escapeHtml(message)}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function switchWorkspaceTab(tab) {
+      const editor = document.getElementById('editor-panel');
+      const preview = document.getElementById('preview-wrapper');
+      const btnEd = document.getElementById('tab-editor-btn');
+      const btnPrv = document.getElementById('tab-preview-btn');
+
+      if (tab === 'editor') {
+        editor.classList.remove('hidden');
+        preview.classList.add('hidden');
+        preview.classList.remove('flex');
+        btnEd.className = 'inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-brand-600 text-white shadow-sm transition';
+        btnPrv.className = 'inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold text-brand-800 hover:text-brand-600 transition';
+      } else {
+        editor.classList.add('hidden');
+        preview.classList.remove('hidden');
+        preview.classList.add('flex');
+        btnPrv.className = 'inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-brand-600 text-white shadow-sm transition';
+        btnEd.className = 'inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold text-brand-800 hover:text-brand-600 transition';
+        renderPreviewSheet();
+        applyPreviewScaling();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
