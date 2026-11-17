@@ -609,7 +609,7 @@
               <input type="text" id="plan-inp-provider" oninput="updateActivePlanField('provider', this.value)" placeholder="e.g., Endowment / Equity" class="w-full rounded-xl border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-brand-500" />
             </div>
             <div>
-              <label class="block text-[11px] font-semibold text-slate-600 mb-1">MONTHLY PREMIUM</label>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">PREMIUM</label>
               <div class="flex rounded-xl border border-slate-300 bg-white overflow-hidden focus-within:border-brand-500">
                 <select id="plan-inp-currency" onchange="updateActivePlanCurrency(this.value)" title="Select Currency" class="bg-brand-50 border-r border-slate-300 px-1.5 py-1.5 text-[11px] font-bold text-brand-800 focus:outline-none cursor-pointer">
                   <option value="PHP">₱ PHP</option>
@@ -1054,7 +1054,7 @@
         isVul: isVulDefault,
         rowOrder: [],
         rows: {
-          'MONTHLY PREMIUM': '',
+          'PREMIUM': '',
           'Frequency': 'Monthly',
           'Payment Period': ''
         },
@@ -1694,13 +1694,13 @@
 
       if (!Array.isArray(plan.rowOrder)) {
         plan.rowOrder = Object.keys(plan.rows || {}).filter(
-          k => k !== 'MONTHLY PREMIUM' && k !== 'Frequency' && k !== 'Payment Period'
+          k => k !== 'PREMIUM' && k !== 'Frequency' && k !== 'Payment Period'
         );
       }
 
       const rowsContainer = document.getElementById('active-plan-rows-editor');
       let rowsHtml = '';
-      const editableKeys = plan.rowOrder.filter(k => k !== 'MONTHLY PREMIUM' && k !== 'Frequency' && k !== 'Payment Period');
+      const editableKeys = plan.rowOrder.filter(k => k !== 'PREMIUM' && k !== 'Frequency' && k !== 'Payment Period');
       const totalRows = editableKeys.length;
       
       editableKeys.forEach((rowKey, rIdx) => {
@@ -2058,7 +2058,7 @@
       headHtml += `</tr>`;
       thead.innerHTML = headHtml;
 
-      const allRowKeys = ['MONTHLY PREMIUM', 'Frequency', 'Payment Period'];
+      const allRowKeys = ['PREMIUM', 'Frequency', 'Payment Period'];
       appState.plans.forEach(plan => {
         const orderedKeys = Array.isArray(plan.rowOrder) ? plan.rowOrder : Object.keys(plan.rows || {});
         orderedKeys.forEach(k => { if (!allRowKeys.includes(k)) allRowKeys.push(k); });
@@ -2069,16 +2069,16 @@
       let bodyHtml = '';
       allRowKeys.forEach((rowKey, rIdx) => {
         const rowBg = rIdx % 2 === 0 ? 'bg-white' : 'bg-brand-50/25';
-        const isHighlightedRow = rowKey === 'MONTHLY PREMIUM';
+        const isHighlightedRow = rowKey === 'PREMIUM';
         const rowTitleStyle = isHighlightedRow ? 'font-extrabold text-brand-900 uppercase tracking-wide' : 'font-semibold text-slate-700';
         bodyHtml += `<tr class="${rowBg}"><td class="${paddingClass} ${rowTitleStyle} border-r border-brand-100 ${fontSizeClass}">${escapeHtml(rowKey)}</td>`;
         appState.plans.forEach(plan => {
           let val = plan.rows[rowKey] !== undefined ? plan.rows[rowKey] : '-';
-          if (rowKey === 'MONTHLY PREMIUM') val = plan.premium || val;
+          if (rowKey === 'PREMIUM') val = plan.premium || val;
           if (rowKey === 'Frequency') val = plan.frequency || val;
           if (rowKey === 'Payment Period') val = plan.paymentTerm || val;
           const cellBg = plan.recommended ? 'bg-brand-50/60' : '';
-          const textStyle = rowKey === 'MONTHLY PREMIUM' ? 'font-extrabold text-brand-700' : 'text-slate-800';
+          const textStyle = rowKey === 'PREMIUM' ? 'font-extrabold text-brand-700' : 'text-slate-800';
           bodyHtml += `<td style="width: ${colWidthPercent}%;" class="${paddingClass} text-center border-r border-brand-100 last:border-r-0 ${cellBg} ${textStyle} ${fontSizeClass} break-words whitespace-normal">${escapeHtml(val)}</td>`;
         });
         bodyHtml += `</tr>`;
@@ -2261,7 +2261,7 @@
     function updateActivePlanField(field, val) {
       const plan = appState.plans[appState.activePlanIndex];
       plan[field] = val;
-      if (field === 'premium') plan.rows['MONTHLY PREMIUM'] = val;
+      if (field === 'premium') plan.rows['PREMIUM'] = val;
       if (field === 'frequency') plan.rows['Frequency'] = val;
       if (field === 'paymentTerm') plan.rows['Payment Period'] = val;
       renderPlanTabs();
@@ -2274,7 +2274,7 @@
       if (plan.premium) {
         const formatted = formatPremiumWithCurrency(plan.premium, currency);
         plan.premium = formatted;
-        plan.rows['MONTHLY PREMIUM'] = formatted;
+        plan.rows['PREMIUM'] = formatted;
         document.getElementById('plan-inp-premium').value = formatted;
       }
       renderPreviewSheet();
@@ -2285,7 +2285,7 @@
       const inputEl = document.getElementById('plan-inp-premium');
       const formatted = formatPremiumWithCurrency(val, plan.currency || 'PHP');
       plan.premium = formatted;
-      plan.rows['MONTHLY PREMIUM'] = formatted;
+      plan.rows['PREMIUM'] = formatted;
       if (inputEl && inputEl.value !== formatted) inputEl.value = formatted;
       renderPreviewSheet();
     }
@@ -2372,7 +2372,7 @@
       const rowName = prompt('Enter new benefit row name (e.g., "Life / Death Benefit"):');
       if (!rowName || !rowName.trim()) return;
       const cleanKey = rowName.trim();
-      if (['MONTHLY PREMIUM', 'Frequency', 'Payment Period'].includes(cleanKey) || plan.rowOrder.includes(cleanKey)) {
+      if (['PREMIUM', 'Frequency', 'Payment Period'].includes(cleanKey) || plan.rowOrder.includes(cleanKey)) {
         showToast(`"${cleanKey}" already exists.`, 'error');
         return;
       }
@@ -2493,16 +2493,67 @@
       }
     }
 
-    async function downloadAsPNG() {
-      const prevTabHidden = document.getElementById('preview-wrapper').classList.contains('hidden');
-      if (prevTabHidden) switchWorkspaceTab('preview');
-      showToast('Generating PNG image...', 'info');
+    async function captureCleanA4Canvas() {
       const sheet = document.getElementById('one-pager-sheet');
-      const origTransform = sheet.style.transform;
-      sheet.style.transform = 'none';
+      const isLand = appState.orientation === 'landscape';
+      const targetWidth = isLand ? 1123 : 816;
+      const targetMinHeight = isLand ? 794 : 1123;
+
+      // Render inside an off-screen unscaled container so mobile/desktop viewport zoom never clips or distorts
+      const cloneHost = document.createElement('div');
+      cloneHost.style.position = 'fixed';
+      cloneHost.style.left = '-10000px';
+      cloneHost.style.top = '0';
+      cloneHost.style.width = targetWidth + 'px';
+      cloneHost.style.background = '#ffffff';
+      cloneHost.style.zIndex = '-9999';
+
+      const clone = sheet.cloneNode(true);
+      clone.style.transform = 'none';
+      clone.style.transition = 'none';
+      clone.style.width = targetWidth + 'px';
+      clone.style.minWidth = targetWidth + 'px';
+      clone.style.maxWidth = targetWidth + 'px';
+      clone.style.minHeight = targetMinHeight + 'px';
+      clone.style.height = 'auto';
+      clone.style.margin = '0';
+      clone.style.borderRadius = '0';
+      clone.style.boxShadow = 'none';
+      clone.style.border = 'none';
+
+      cloneHost.appendChild(clone);
+      document.body.appendChild(cloneHost);
+
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+      const fullHeight = Math.max(targetMinHeight, clone.scrollHeight);
       try {
-        const canvas = await html2canvas(sheet, { scale: 2, useCORS: true, logging: false });
-        sheet.style.transform = origTransform;
+        const canvas = await html2canvas(clone, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff',
+          width: targetWidth,
+          height: fullHeight,
+          windowWidth: targetWidth,
+          windowHeight: fullHeight,
+          scrollX: 0,
+          scrollY: 0
+        });
+        return canvas;
+      } finally {
+        document.body.removeChild(cloneHost);
+      }
+    }
+
+    async function downloadAsPNG() {
+      renderPreviewSheet();
+      showToast('Generating high-res PNG...', 'info');
+      try {
+        const canvas = await captureCleanA4Canvas();
         const suffix = appState.studioMode === 'single-vul' ? '_VUL_Proposal' : (appState.studioMode === 'single-trad' ? '_Traditional_Proposal' : '_Benefit_Comparison');
         const link = document.createElement('a');
         link.download = (appState.clientName ? appState.clientName.replace(/\s+/g, '_') : 'Client') + suffix + '.png';
@@ -2510,43 +2561,48 @@
         link.click();
         showToast('PNG downloaded successfully!', 'success');
       } catch (err) {
-        sheet.style.transform = origTransform;
+        console.error(err);
         showToast('Failed to generate PNG.', 'error');
       }
     }
 
     async function downloadAsPDF() {
-      const prevTabHidden = document.getElementById('preview-wrapper').classList.contains('hidden');
-      if (prevTabHidden) switchWorkspaceTab('preview');
-      showToast('Preparing A4 PDF...', 'info');
-      const sheet = document.getElementById('one-pager-sheet');
-      const origTransform = sheet.style.transform;
-      sheet.style.transform = 'none';
+      renderPreviewSheet();
+      showToast('Preparing single-page A4 PDF...', 'info');
       try {
-        const canvas = await html2canvas(sheet, { scale: 2, useCORS: true, logging: false });
-        sheet.style.transform = origTransform;
+        const canvas = await captureCleanA4Canvas();
         const { jsPDF } = window.jspdf;
         const isLand = appState.orientation === 'landscape';
         const pdf = new jsPDF(isLand ? 'l' : 'p', 'mm', 'a4');
         const imgData = canvas.toDataURL('image/png');
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
-        const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 0;
-        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
-        heightLeft -= pdfHeight;
-        while (heightLeft >= 0) {
-          position = heightLeft - imgHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
-          heightLeft -= pdfHeight;
+
+        // Scale proportionally to fit cleanly onto a single A4 page with zero clipping or blank 2nd page
+        const imgAspect = canvas.width / canvas.height;
+        const pageAspect = pdfWidth / pdfHeight;
+        let renderWidth = pdfWidth;
+        let renderHeight = pdfHeight;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        if (imgAspect > pageAspect) {
+          renderWidth = pdfWidth;
+          renderHeight = pdfWidth / imgAspect;
+          offsetY = (pdfHeight - renderHeight) / 2;
+        } else {
+          renderHeight = pdfHeight;
+          renderWidth = pdfHeight * imgAspect;
+          offsetX = (pdfWidth - renderWidth) / 2;
         }
+
+        pdf.addImage(imgData, 'PNG', offsetX, offsetY, renderWidth, renderHeight, undefined, 'FAST');
+
         const suffix = appState.studioMode === 'single-vul' ? '_VUL_Proposal' : (appState.studioMode === 'single-trad' ? '_Traditional_Proposal' : '_Benefit_Comparison');
         pdf.save((appState.clientName ? appState.clientName.replace(/\s+/g, '_') : 'Client') + suffix + '.pdf');
-        showToast('PDF downloaded successfully!', 'success');
+        showToast('Single-page A4 PDF downloaded!', 'success');
       } catch (err) {
-        sheet.style.transform = origTransform;
+        console.error(err);
         showToast('Failed to generate PDF.', 'error');
       }
     }
